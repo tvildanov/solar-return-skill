@@ -1,0 +1,10 @@
+{
+  "name": "astroempathy-solar-return",
+  "owner": {"name": "AstroEmpathy"},
+  "metadata": {"description": "Solar Return skill package; Python execution is a separate host capability."},
+  "plugins": [{
+    "name": "solar-return",
+    "source": "plugins/solar-return",
+    "description": "Solar-return calculation and reflection calendar; approved Python environment required."
+  }]
+}

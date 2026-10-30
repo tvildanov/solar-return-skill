@@ -25,3 +25,10 @@ Claude upload/enable/prompt and Claude Code discovery must be checked in actual 
 ## Maintenance
 
 Keep `solar-return/VERSION`, README, ZIP and SHA-256 together. Rebuild after every packaged change and inspect the diff. Re-test after dependency updates. Do not commit generated result JSON. Preserve AGPL text and author attribution.
+
+## Cross-platform adapters
+
+- `python3 tools/package_plugin.py` synchronizes the generated plugin copy from the canonical skill.
+- `python3 tools/package_plugin.py --check` rejects drift, unlisted files and stale archives.
+- `tests/test_distribution.py` exercises three host copy destinations using temporary directories, dry-run, refusal of existing installs and symlink destinations, and marketplace path resolution. No real user profile is modified.
+- `tests/test_solar_reference.py` uses recorded synthetic JPL Sun cases with explicitly limited tolerances. It is offline regression coverage, not a fresh external accuracy audit.

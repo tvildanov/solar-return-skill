@@ -1,0 +1,10 @@
+{
+  "name": "astroempathy-solar-return",
+  "interface": {"displayName": "AstroEmpathy Solar Return"},
+  "plugins": [{
+    "name": "solar-return",
+    "source": {"source": "local", "path": "./plugins/solar-return"},
+    "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
+    "category": "Productivity"
+  }]
+}

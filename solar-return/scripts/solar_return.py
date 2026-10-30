@@ -3,7 +3,7 @@
 # Copyright (C) 2026 AstroEmpathy contributors
 # Licensed under the GNU Affero General Public License v3.0 (see LICENSE).
 # Uses the Swiss Ephemeris via pyswisseph (AGPL), (c) Astrodienst AG.
-# Modified 2026-10-30 for distribution version 0.2.0: input/DST validation,
+# Modified 2026-10-30 for distribution version 0.2.1: input/DST validation,
 # safe report creation, rounding fixes, explicit errors and provenance metadata.
 # Upstream: https://github.com/tvildanov/solar-return-skill
 """
@@ -42,7 +42,7 @@ except ImportError:
              "python -m pip install -r requirements.txt inside it. See INSTALL.md.")
 
 FLAGS = swe.FLG_MOSEPH | swe.FLG_SPEED   # built-in Moshier ephemeris, no data files needed
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 MIN_YEAR, MAX_YEAR = 2, 2999
 HOUSE_SYSTEMS = {"P": "Placidus", "K": "Koch", "W": "Whole Sign"}
 
@@ -138,6 +138,9 @@ def provenance(args) -> dict:
         "calendar_interval_seconds": 86400,
         "solar_return_time_rounding": "nearest second; human local display nearest minute",
         "supported_years": [MIN_YEAR, MAX_YEAR],
+        "year_semantics": "birthday anniversary year; nearest return may occur in adjacent calendar year",
+        "calendar": "proleptic Gregorian",
+        "time_scale_note": "UTC is approximated as UT1 for calc_ut; no explicit DUT1 correction. Historical/future time-scale uncertainty applies.",
         "interpretation": "Astrological reflection, not scientifically validated prediction.",
     }
 
@@ -285,7 +288,7 @@ def main(argv=None):
     p.add_argument("--birth-lat", type=lambda x: coordinate(x, latitude=True), required=True)
     p.add_argument("--birth-lon", type=lambda x: coordinate(x, latitude=False), required=True)
     p.add_argument("--year", type=supported_year, required=True,
-                   help=f"year of the solar return ({MIN_YEAR}–{MAX_YEAR})")
+                   help=f"birthday anniversary year ({MIN_YEAR}–{MAX_YEAR}); return may fall in adjacent calendar year")
     p.add_argument("--sr-tz", required=True, help="IANA time zone where the return is met")
     p.add_argument("--sr-lat", type=lambda x: coordinate(x, latitude=True), required=True)
     p.add_argument("--sr-lon", type=lambda x: coordinate(x, latitude=False), required=True)
@@ -339,6 +342,10 @@ def run(a):
 
     print("\n" + T("=== МОМЕНТ СОЛЯРА ===", "=== SOLAR RETURN MOMENT ==="))
     print(T("Солнце возвращается в", "Sun returns to"), fmt_lon(sun0, L))
+    print(T("Год годовщины:", "Birthday anniversary year:"), a.year)
+    if sr_utc.year != a.year or sr_utc.astimezone(sr_tz).year != a.year:
+        print(T("Примечание: ближайший возврат попал в соседний календарный год.",
+                "Note: the nearest return falls in an adjacent calendar year."))
     print("  UTC:", sr_utc.strftime("%Y-%m-%d %H:%M:%S"))
     print(f"  {a.sr_tz}:", rmin(sr_utc.astimezone(sr_tz)).strftime("%Y-%m-%d %H:%M %z"))
     for tz, zone in extra_zones.items():

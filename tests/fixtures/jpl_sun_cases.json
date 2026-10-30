@@ -1,0 +1,95 @@
+{
+  "recorded_at": "2026-10-30",
+  "source": "NASA JPL Horizons; geocentric Sun, observer apparent ecliptic longitude of date, quantity 31",
+  "comparison_note": "Recorded independent audit, not a live external comparison during tests. UTC/UT1/TT conventions limit interpretation.",
+  "cases": [
+    {
+      "label": "moscow",
+      "birth_local": "1990-05-21 14:30",
+      "birth_tz": "Europe/Moscow",
+      "birth_utc": "1990-05-21T10:30:00+00:00",
+      "requested_year": 2026,
+      "return_utc": "2026-05-21T03:29:20+00:00",
+      "jpl_return_interpolated_utc": "2026-05-21T03:29:18.258528+00:00",
+      "calculator_minus_jpl_seconds": 1.7414721735809773,
+      "jpl_root_residual_arcseconds": 0.0
+    },
+    {
+      "label": "leap",
+      "birth_local": "2000-02-29 12:00",
+      "birth_tz": "Etc/UTC",
+      "birth_utc": "2000-02-29T12:00:00+00:00",
+      "requested_year": 2027,
+      "return_utc": "2027-03-01T00:58:01+00:00",
+      "jpl_return_interpolated_utc": "2027-03-01T00:58:01.825925+00:00",
+      "calculator_minus_jpl_seconds": -0.8259248636759697,
+      "jpl_root_residual_arcseconds": 0.0
+    },
+    {
+      "label": "equinox",
+      "birth_local": "1980-03-20 12:00",
+      "birth_tz": "Etc/UTC",
+      "birth_utc": "1980-03-20T12:00:00+00:00",
+      "requested_year": 2026,
+      "return_utc": "2026-03-20T15:36:16+00:00",
+      "jpl_return_interpolated_utc": "2026-03-20T15:36:15.730552+00:00",
+      "calculator_minus_jpl_seconds": 0.2694480648829894,
+      "jpl_root_residual_arcseconds": 0.0
+    },
+    {
+      "label": "wrap",
+      "birth_local": "2000-03-20 07:35",
+      "birth_tz": "Etc/UTC",
+      "birth_utc": "2000-03-20T07:35:00+00:00",
+      "requested_year": 2026,
+      "return_utc": "2026-03-20T14:45:42+00:00",
+      "jpl_return_interpolated_utc": "2026-03-20T14:45:43.069255+00:00",
+      "calculator_minus_jpl_seconds": -1.0692552915396962,
+      "jpl_root_residual_arcseconds": 0.0
+    },
+    {
+      "label": "jan1",
+      "birth_local": "2000-01-01 00:01",
+      "birth_tz": "Etc/UTC",
+      "birth_utc": "2000-01-01T00:01:00+00:00",
+      "requested_year": 2026,
+      "return_utc": "2025-12-31T07:18:26+00:00",
+      "jpl_return_interpolated_utc": "2025-12-31T07:18:25.457321+00:00",
+      "calculator_minus_jpl_seconds": 0.5426794766353001,
+      "jpl_root_residual_arcseconds": 0.0
+    },
+    {
+      "label": "dec31",
+      "birth_local": "2000-12-31 23:59",
+      "birth_tz": "Etc/UTC",
+      "birth_utc": "2000-12-31T23:59:00+00:00",
+      "requested_year": 2027,
+      "return_utc": "2028-01-01T13:04:51+00:00",
+      "jpl_return_interpolated_utc": "2028-01-01T13:04:51.550847+00:00",
+      "calculator_minus_jpl_seconds": -0.5508474610291235,
+      "jpl_root_residual_arcseconds": 0.0
+    },
+    {
+      "label": "historical",
+      "birth_local": "1900-06-15 12:00",
+      "birth_tz": "Etc/UTC",
+      "birth_utc": "1900-06-15T12:00:00+00:00",
+      "requested_year": 2026,
+      "return_utc": "2026-06-14T22:53:59+00:00",
+      "jpl_return_interpolated_utc": "2026-06-14T22:53:53.602983+00:00",
+      "calculator_minus_jpl_seconds": 5.397016725037675,
+      "jpl_root_residual_arcseconds": 0.0
+    },
+    {
+      "label": "future",
+      "birth_local": "2000-07-01 12:00",
+      "birth_tz": "Etc/UTC",
+      "birth_utc": "2000-07-01T12:00:00+00:00",
+      "requested_year": 2100,
+      "return_utc": "2100-07-01T15:47:18+00:00",
+      "jpl_return_interpolated_utc": "2100-07-01T15:47:35.493583+00:00",
+      "calculator_minus_jpl_seconds": -17.493582967858593,
+      "jpl_root_residual_arcseconds": 0.0
+    }
+  ]
+}

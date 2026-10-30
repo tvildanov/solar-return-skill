@@ -1,6 +1,6 @@
 # Установка / Installation
 
-Этот ZIP содержит навык `solar-return` версии 0.2.0 от AstroEmpathy.
+Этот ZIP содержит навык `solar-return` версии 0.2.1 от AstroEmpathy.
 
 1. В Claude откройте **Customize → Skills** и загрузите исходный ZIP целиком.
 2. Включите навык и выполнение кода. Доступность зависит от клиента и аккаунта.

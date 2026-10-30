@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "solar-return",
+  "version": "0.2.1",
+  "description": "Solar-return calculator and reflective 24-day calendar. Requires an approved Python runtime; no hosted calculation service.",
+  "author": {"name": "AstroEmpathy", "url": "https://astroempathy.org"},
+  "homepage": "https://github.com/tvildanov/solar-return-skill",
+  "repository": "https://github.com/tvildanov/solar-return-skill",
+  "license": "AGPL-3.0-only"
+}

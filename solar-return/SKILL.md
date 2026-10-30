@@ -17,7 +17,7 @@ Ask only for what is missing:
 
 1. Date and local time of birth (as exact as possible). If the time is unknown, explain that both the return time and houses are uncertain; do not invent a time or present a precise chart. A provisional time-based scenario requires the user to explicitly choose and acknowledge the assumption.
 2. Place of birth (city, country).
-3. The year of the solar return they want (default: the next one that has not passed yet, or the current one if it is within the last 12 days).
+3. The birthday-anniversary year they want. `--year` searches near that anniversary; the event may fall in the preceding/following calendar year. If they mean an event strictly within January–December, clarify rather than silently changing the meaning (default: the next one that has not passed yet, or the current one if it is within the last 12 days).
 4. Where they will be at the moment of the solar return (city and country are enough). If unknown, ask whether to use their current city; do not infer their location. Do not request a full name or home address.
 
 Before collecting data, explain that the AI host processes chat data and that an optional JSON export stores birth data and coordinates. Do not claim that data stays private or local in a hosted chat. Use only data the person is comfortable sharing, and never include it in repository files.
@@ -47,7 +47,7 @@ python scripts/solar_return.py \
 
 Use `--json <new-path>` only when the user wants an export; it stores their original inputs. Do not overwrite a result file or upload it without permission. For a repeated local birth hour the script requires `--birth-fold 0` (earlier occurrence) or `1` (later); ask which UTC offset the record means. A nonexistent local time must be corrected, not silently shifted.
 
-The script prints the natal chart, the exact solar-return moment, the solar-return chart (Placidus by default; `--house-system W` for whole signs), the house of each solar-return planet in both the solar-return and the natal chart, major aspects, and the 24-day calendar. Use only these computed numbers; never estimate positions by eye. If Placidus fails at a polar latitude, explain the limitation and ask before switching explicitly to Whole Sign. State the house system, location assumptions and ephemeris mode in the report. Numerical output is not an independent accuracy certificate.
+The script prints the natal chart, the exact solar-return moment, the solar-return chart (Placidus by default; `--house-system W` for whole signs), the house of each solar-return planet in both the solar-return and the natal chart, major aspects, and the 24-day calendar. Use only these computed numbers; never estimate positions by eye. If Placidus fails at a polar latitude, explain the limitation and ask before switching explicitly to Whole Sign. State the house system, location assumptions and ephemeris mode in the report. Numerical output is not an independent accuracy certificate. UTC is approximated as UT1 and all dates use the proleptic Gregorian calendar. Historical and distant-future results need extra caution; see the repository accuracy report. Validation of the Sun does not validate every planet, node, house or interpretation.
 
 ## 4. Write the report
 
