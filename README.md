@@ -10,7 +10,7 @@
 
 ### В приложении Claude (claude.ai, компьютер или телефон)
 
-1. Скачайте `solar-return.zip` со страницы [Releases](../../releases/latest).
+1. Скачайте [solar-return.zip](https://github.com/tvildanov/solar-return-skill/raw/main/solar-return.zip).
 2. В Claude откройте **Customize → Skills** и загрузите этот ZIP.
 3. Убедитесь, что в настройках включено выполнение кода (code execution) — без него навык не сможет посчитать карту.
 4. Напишите в чате: «Рассчитай мой соляр» — и ответьте на вопросы о дате, времени и месте рождения и о месте, где встретите соляр.
@@ -61,7 +61,7 @@ Precise calculation: Swiss Ephemeris, with historical time zones and daylight sa
 
 ### Install in the Claude app (claude.ai, desktop or mobile)
 
-1. Download `solar-return.zip` from [Releases](../../releases/latest).
+1. Download [solar-return.zip](https://github.com/tvildanov/solar-return-skill/raw/main/solar-return.zip).
 2. In Claude open **Customize → Skills** and upload the ZIP.
 3. Make sure code execution is enabled — the skill needs it to compute the chart.
 4. Ask: "Calculate my solar return", then answer the questions about your birth data and where you will be on your birthday.
