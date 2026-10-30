@@ -1,13 +1,13 @@
 ---
 name: solar-return
-description: Calculates a person's solar return (the exact moment the Sun returns to its birth position), the solar-return chart for the place where it is met, and a 24-day calendar of 12 days closing the old year and 12 days opening the new one, then writes a readable yearly report. Use when someone asks for their solar return, соляр, солярный гороскоп, birthday chart for the year, or "my year ahead". Works in Russian and English.
+description: Calculate a solar return (соляр), yearly chart and 12-before/12-after day calendar in Russian or English. Use for explicit solar-return requests; requires Python execution.
 ---
 
 # Solar return (соляр)
 
 A solar return is the moment the transiting Sun comes back to the exact degree it occupied at birth. It happens once a year, close to the birthday, but not always on the same day or hour. The chart is cast for the place where the person **is** at that moment, so the same minute gives different houses in different cities.
 
-This skill computes everything with the Swiss Ephemeris and turns it into a calm, practical report. Treat astrology as a lens for reflection, not as a prediction of fate.
+This skill computes astronomical positions using Swiss Ephemeris in built-in Moshier mode and turns them into a calm, practical astrological report. Astrology is a lens for reflection, not a scientifically validated forecast. Preserve the original 12-before/12-after method; do not substitute an unrelated solar-return tradition.
 
 Answer in the language the person writes in.
 
@@ -15,30 +15,39 @@ Answer in the language the person writes in.
 
 Ask only for what is missing:
 
-1. Date and local time of birth (as exact as possible; say that an unknown time makes the houses unreliable).
+1. Date and local time of birth (as exact as possible). If the time is unknown, explain that both the return time and houses are uncertain; do not invent a time or present a precise chart. A provisional time-based scenario requires the user to explicitly choose and acknowledge the assumption.
 2. Place of birth (city, country).
 3. The year of the solar return they want (default: the next one that has not passed yet, or the current one if it is within the last 12 days).
-4. Where they will be at the moment of the solar return (city or address). If unknown, use where they live.
+4. Where they will be at the moment of the solar return (city and country are enough). If unknown, ask whether to use their current city; do not infer their location. Do not request a full name or home address.
+
+Before collecting data, explain that the AI host processes chat data and that an optional JSON export stores birth data and coordinates. Do not claim that data stays private or local in a hosted chat. Use only data the person is comfortable sharing, and never include it in repository files.
 
 ## 2. Resolve coordinates and time zones
 
 - For each place find latitude, longitude (east positive, west negative) and the IANA time zone name (for example `Europe/Moscow`, `America/Cancun`, `Asia/Tashkent`).
-- Use web search or a geocoder if available; otherwise use well-known city coordinates and tell the person which ones you used.
+- Use a verified coordinate/time-zone source when available. Search only for city/country, never send birth date, birth time or a street address to a geocoder. Explain external lookup use before sharing location data. Otherwise state any approximate city-centre coordinates and ask the user to confirm the assumption.
 - Never guess historical daylight-saving rules yourself: pass the IANA zone and let the script apply its history. If a region changed zones (common in the former USSR), say which zone you assumed and offer to recalculate.
 
 ## 3. Run the calculation
 
+Resolve paths relative to this installed skill folder, not the current project. Use an existing suitable Python environment where possible. Follow the host's approval requirements before installing dependencies or executing downloaded code. If execution is unavailable, state that the chart was not calculated; never fabricate a result.
+
+For local setup use an isolated environment (`python3 -m venv <writable-env-path>`) and its Python with `-m pip install -r <skill-folder>/requirements.txt`. Never use `sudo pip`, modify system Python, or bypass a failed permission check. See [INSTALL.md](INSTALL.md).
+
+Run with that environment's Python (the example assumes the working directory is the skill folder):
+
 ```bash
-pip install pyswisseph            # add --break-system-packages if pip refuses
-python3 scripts/solar_return.py \
+python scripts/solar_return.py \
   --birth "YYYY-MM-DD HH:MM" --birth-tz <IANA zone> --birth-lat <lat> --birth-lon <lon> \
   --year <year> \
   --sr-tz <IANA zone> --sr-lat <lat> --sr-lon <lon> \
   --extra-tz <another zone, optional, repeatable> \
-  --lang ru|en --json result.json
+  --lang ru|en
 ```
 
-The script prints the natal chart, the exact solar-return moment, the solar-return chart (Placidus by default; `--house-system W` for whole signs), the house of each solar-return planet in both the solar-return and the natal chart, major aspects, and the 24-day calendar. Use only these computed numbers; never estimate positions by eye.
+Use `--json <new-path>` only when the user wants an export; it stores their original inputs. Do not overwrite a result file or upload it without permission. For a repeated local birth hour the script requires `--birth-fold 0` (earlier occurrence) or `1` (later); ask which UTC offset the record means. A nonexistent local time must be corrected, not silently shifted.
+
+The script prints the natal chart, the exact solar-return moment, the solar-return chart (Placidus by default; `--house-system W` for whole signs), the house of each solar-return planet in both the solar-return and the natal chart, major aspects, and the 24-day calendar. Use only these computed numbers; never estimate positions by eye. If Placidus fails at a polar latitude, explain the limitation and ask before switching explicitly to Whole Sign. State the house system, location assumptions and ephemeris mode in the report. Numerical output is not an independent accuracy certificate.
 
 ## 4. Write the report
 
@@ -65,12 +74,12 @@ Do not give medical, legal or financial instructions; do not predict death, illn
 
 ## 5. The 24 days
 
-The 12 days before the solar return close the old year; the 12 days after open the new one. Each day is exactly 24 hours long and starts at the minute of the solar return (local time of the place where it is met). Each day corresponds to one house:
+The 12 days before the solar return close the old year; the 12 days after open the new one. Each day is exactly 24 elapsed hours long, anchored to the return instant in UTC, and then displayed in the local time zone. When daylight-saving time changes, the local clock hour may shift; do not claim every interval starts at the same local hour. Each day corresponds to one house:
 
 - Closing day −k (k = 12 … 1) covers house k: review and complete that area of life.
 - Opening day +k (k = 1 … 12) covers house k: set the tone and plant seeds in that area.
 
-Day +1 is the most important day of the year: spend it in a good mood, with pleasant people, without conflict. Days of the 8th house (−8 and +8) are traditionally treated with extra care: avoid risky moves and major paperwork, prefer rest and reflection. Also highlight the days whose house holds planets in the solar-return chart.
+Within this symbolic tradition, day +1 marks the opening of the cycle: suggest a gentle intention, pleasant company or quiet time without demanding a particular mood. Days of the 8th house (−8 and +8) can prompt reflection on change and shared resources. Do not advise postponing medical care, legal paperwork, payments or important decisions on astrological grounds. Also highlight the days whose house holds planets in the solar-return chart, as optional journaling themes rather than predictions.
 
 | House | Area of life (EN) | Сфера жизни (RU) |
 | --- | --- | --- |

@@ -3,6 +3,9 @@
 # Copyright (C) 2026 AstroEmpathy contributors
 # Licensed under the GNU Affero General Public License v3.0 (see LICENSE).
 # Uses the Swiss Ephemeris via pyswisseph (AGPL), (c) Astrodienst AG.
+# Modified 2026-10-30 for distribution version 0.2.0: input/DST validation,
+# safe report creation, rounding fixes, explicit errors and provenance metadata.
+# Upstream: https://github.com/tvildanov/solar-return-skill
 """
 Calculate a solar return (the exact moment the Sun returns to its natal
 longitude), the solar-return chart for the place where it is met, and the
@@ -20,16 +23,134 @@ Latitude: north positive. Longitude: east positive, west negative.
 Time zones are IANA names (Europe/Moscow, America/Cancun, Asia/Tashkent ...);
 historical daylight-saving rules are applied automatically.
 """
-import argparse, datetime as dt, json, sys
-from zoneinfo import ZoneInfo
+import argparse
+import datetime as dt
+from importlib import metadata as import_metadata
+import json
+import math
+import os
+from pathlib import Path
+import platform
+import sys
+import zoneinfo
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 try:
     import swisseph as swe
 except ImportError:
-    sys.exit("pyswisseph is not installed. Run:  pip install pyswisseph\n"
-             "(add --break-system-packages if pip refuses)")
+    sys.exit("pyswisseph is not installed. Create a virtual environment, then run\n"
+             "python -m pip install -r requirements.txt inside it. See INSTALL.md.")
 
 FLAGS = swe.FLG_MOSEPH | swe.FLG_SPEED   # built-in Moshier ephemeris, no data files needed
+VERSION = "0.2.0"
+MIN_YEAR, MAX_YEAR = 2, 2999
+HOUSE_SYSTEMS = {"P": "Placidus", "K": "Koch", "W": "Whole Sign"}
+
+
+def load_time_zone(name: str) -> ZoneInfo:
+    try:
+        return ZoneInfo(name)
+    except (ZoneInfoNotFoundError, ValueError) as exc:
+        raise ValueError(f"Unknown or unavailable IANA time zone {name!r}; "
+                         "check its spelling and install the pinned tzdata dependency.") from exc
+
+
+def localize_birth(value: str, zone_name: str, fold=None) -> dt.datetime:
+    """Validate a wall time by roundtripping each possible fold through UTC."""
+    if fold not in (None, 0, 1):
+        raise ValueError("birth fold must be 0 or 1")
+    try:
+        naive = dt.datetime.strptime(value, "%Y-%m-%d %H:%M")
+    except ValueError as exc:
+        raise ValueError('Birth date must be a valid date/time in "YYYY-MM-DD HH:MM" format.') from exc
+    if not MIN_YEAR <= naive.year <= MAX_YEAR:
+        raise ValueError(f"Birth year must be between {MIN_YEAR} and {MAX_YEAR}.")
+    zone = load_time_zone(zone_name)
+    valid = {}
+    for candidate_fold in (0, 1):
+        candidate = naive.replace(tzinfo=zone, fold=candidate_fold)
+        restored = candidate.astimezone(dt.timezone.utc).astimezone(zone)
+        if restored.replace(tzinfo=None) == naive:
+            valid[candidate_fold] = candidate
+    if not valid:
+        raise ValueError(f"Birth time {value} does not exist in {zone_name} because of "
+                         "a clock transition. Check the recorded local time; it was not shifted automatically.")
+    ambiguous = len({x.utcoffset() for x in valid.values()}) > 1
+    if ambiguous and fold is None:
+        raise ValueError(f"Birth time {value} is ambiguous in {zone_name}; specify "
+                         "--birth-fold 0 for the earlier occurrence or --birth-fold 1 for the later one.")
+    return valid[fold if fold is not None else 0]
+
+
+def coordinate(value: str, *, latitude: bool) -> float:
+    try:
+        number = float(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("coordinate must be a number") from exc
+    limit = 90 if latitude else 180
+    valid = (-limit < number < limit) if latitude else (-limit <= number <= limit)
+    if not math.isfinite(number) or not valid:
+        domain = "strictly between -90 and 90 (exact poles unsupported)" if latitude else "between -180 and 180"
+        raise argparse.ArgumentTypeError(f"coordinate must be finite and {domain}")
+    return number
+
+
+def supported_year(value: str) -> int:
+    try:
+        year = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("year must be an integer") from exc
+    if not MIN_YEAR <= year <= MAX_YEAR:
+        raise argparse.ArgumentTypeError(f"year must be between {MIN_YEAR} and {MAX_YEAR}")
+    return year
+
+
+def package_version(name: str) -> str:
+    try:
+        return import_metadata.version(name)
+    except import_metadata.PackageNotFoundError:
+        return "not installed / unavailable"
+
+
+def provenance(args) -> dict:
+    sources = {}
+    for key in dict.fromkeys([args.birth_tz, args.sr_tz, *args.extra_tz]):
+        # ZoneInfo has already validated the keys. Its documented search order
+        # checks system TZPATH first, then the separately installed tzdata package.
+        sources[key] = "tzdata package"
+        for root in zoneinfo.TZPATH:
+            if (Path(root) / key).is_file():
+                sources[key] = "system IANA database (version not determined)"
+                break
+    return {
+        "calculator_version": VERSION,
+        "python_version": platform.python_version(),
+        "pyswisseph_version": package_version("pyswisseph"),
+        "swiss_ephemeris_version": str(swe.version),
+        "ephemeris": "Moshier (Swiss Ephemeris)",
+        "ephemeris_flags": FLAGS,
+        "coordinate_frame": "geocentric tropical ecliptic longitude",
+        "house_system": args.house_system,
+        "house_assignment": "longitude relative to house cusps; latitude ignored",
+        "tzdata_package_version": package_version("tzdata"),
+        "timezone_sources": sources,
+        "timezone_source_note": "System TZPATH takes precedence when available. PYTHONTZPATH='' selects installed tzdata.",
+        "calendar_interval_seconds": 86400,
+        "solar_return_time_rounding": "nearest second; human local display nearest minute",
+        "supported_years": [MIN_YEAR, MAX_YEAR],
+        "interpretation": "Astrological reflection, not scientifically validated prediction.",
+    }
+
+
+def write_json_exclusive(filename: str, data: dict) -> None:
+    """Create a private report only; never follow or replace an existing path."""
+    try:
+        fd = os.open(filename, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    except FileExistsError as exc:
+        raise ValueError(f"Refusing to overwrite existing JSON path {filename!r}; choose a new filename.") from exc
+    with os.fdopen(fd, "w", encoding="utf-8") as output:
+        json.dump(data, output, ensure_ascii=False, indent=2, allow_nan=False)
+        output.write("\n")
 
 SIGNS = {
     "ru": ["Овен", "Телец", "Близнецы", "Рак", "Лев", "Дева", "Весы",
@@ -61,17 +182,21 @@ def from_julday(j: float) -> dt.datetime:
 
 
 def rmin(t: dt.datetime) -> dt.datetime:
-    """Round to the nearest minute for display."""
-    return (t + dt.timedelta(seconds=30)).replace(second=0, microsecond=0)
+    """Round the instant, not a local wall clock that may cross a DST gap/fold."""
+    zone = t.tzinfo
+    base = t.astimezone(dt.timezone.utc) if zone is not None else t
+    rounded = (base + dt.timedelta(seconds=30)).replace(second=0, microsecond=0)
+    return rounded.astimezone(zone) if zone is not None else rounded
 
 
 def fmt_lon(lon: float, lang: str) -> str:
-    s = int(lon // 30) % 12
-    deg = lon - 30 * s
-    d = int(deg)
-    m = int(round((deg - d) * 60))
-    if m == 60:
-        d, m = d + 1, 0
+    if not math.isfinite(lon):
+        raise ValueError("longitude must be finite")
+    # Round the entire circle before splitting into sign/degree/minute, so
+    # rounding 29°59'59\" correctly advances to 0°00' of the following sign.
+    arcminutes = int(math.floor((lon % 360) * 60 + 0.5)) % (360 * 60)
+    s, remainder = divmod(arcminutes, 30 * 60)
+    d, m = divmod(remainder, 60)
     return f"{d}°{m:02d}' {SIGNS[lang][s]}"
 
 
@@ -84,7 +209,14 @@ def house_of(lon: float, cusps) -> int:
 
 
 def chart(j: float, lat: float, lon: float, hsys: bytes = b"P") -> dict:
-    cusps, ascmc = swe.houses(j, lat, lon, hsys)
+    if hsys not in tuple(x.encode("ascii") for x in HOUSE_SYSTEMS):
+        raise ValueError("Unsupported house system; choose P, K or W.")
+    try:
+        cusps, ascmc = swe.houses(j, lat, lon, hsys)
+    except swe.Error as exc:
+        raise ValueError(f"Cannot calculate {HOUSE_SYSTEMS[hsys.decode()]} houses at this location/time. "
+                         "Placidus/Koch can fail at high latitude or polar locations. "
+                         "No alternative was substituted; explicitly choose --house-system W if appropriate.") from exc
     out = {"asc": ascmc[0], "mc": ascmc[1], "cusps": list(cusps), "bodies": {}}
     for key, pid, _, _ in BODIES:
         r = swe.calc_ut(j, pid, FLAGS)[0]
@@ -118,9 +250,13 @@ def solar_return_moment(natal_sun: float, year: int, birth_local: dt.datetime) -
     for _ in range(50):
         s = swe.calc_ut(j, swe.SUN, FLAGS)[0]
         diff = ((natal_sun - s[0] + 180) % 360) - 180
+        if not math.isfinite(diff) or not math.isfinite(s[3]) or abs(s[3]) < 1e-12:
+            raise ValueError("Solar-return solver received invalid longitude/speed.")
         j += diff / s[3]
         if abs(diff) < 1e-9:
             break
+    else:
+        raise ValueError("Solar-return calculation did not converge; no result was reported.")
     return from_julday(j)
 
 
@@ -139,26 +275,41 @@ def day_calendar(sr_utc: dt.datetime, tz: ZoneInfo) -> list:
     return days
 
 
-def main():
+def main(argv=None):
     p = argparse.ArgumentParser(description="Solar return calculator (Swiss Ephemeris)")
+    p.add_argument("--version", action="version", version=f"solar-return {VERSION}")
     p.add_argument("--birth", required=True, help='local birth time "YYYY-MM-DD HH:MM"')
     p.add_argument("--birth-tz", required=True, help="IANA time zone of the birthplace")
-    p.add_argument("--birth-lat", type=float, required=True)
-    p.add_argument("--birth-lon", type=float, required=True)
-    p.add_argument("--year", type=int, required=True, help="year of the solar return")
+    p.add_argument("--birth-fold", type=int, choices=(0, 1),
+                   help="required only for repeated local times: 0=earlier occurrence, 1=later")
+    p.add_argument("--birth-lat", type=lambda x: coordinate(x, latitude=True), required=True)
+    p.add_argument("--birth-lon", type=lambda x: coordinate(x, latitude=False), required=True)
+    p.add_argument("--year", type=supported_year, required=True,
+                   help=f"year of the solar return ({MIN_YEAR}–{MAX_YEAR})")
     p.add_argument("--sr-tz", required=True, help="IANA time zone where the return is met")
-    p.add_argument("--sr-lat", type=float, required=True)
-    p.add_argument("--sr-lon", type=float, required=True)
+    p.add_argument("--sr-lat", type=lambda x: coordinate(x, latitude=True), required=True)
+    p.add_argument("--sr-lon", type=lambda x: coordinate(x, latitude=False), required=True)
     p.add_argument("--extra-tz", action="append", default=[],
                    help="extra time zones to show the moment in (repeatable)")
-    p.add_argument("--house-system", default="P", help="P=Placidus (default), K=Koch, W=Whole sign ...")
+    p.add_argument("--house-system", default="P", choices=tuple(HOUSE_SYSTEMS),
+                   help="P=Placidus (default), K=Koch, W=Whole Sign; no automatic fallback")
     p.add_argument("--lang", choices=["ru", "en"], default="ru")
-    p.add_argument("--json", help="write full results to this JSON file")
-    a = p.parse_args()
+    p.add_argument("--json", help="create a new private JSON file containing birth/location inputs; never overwrite")
+    a = p.parse_args(argv)
+
+    try:
+        run(a)
+    except (ValueError, OSError, OverflowError, swe.Error) as exc:
+        p.error(str(exc))
+
+
+def run(a):
 
     L = a.lang
     hsys = a.house_system.encode()
-    birth_local = dt.datetime.strptime(a.birth, "%Y-%m-%d %H:%M").replace(tzinfo=ZoneInfo(a.birth_tz))
+    birth_local = localize_birth(a.birth, a.birth_tz, a.birth_fold)
+    sr_tz = load_time_zone(a.sr_tz)
+    extra_zones = {name: load_time_zone(name) for name in a.extra_tz}
     birth_utc = birth_local.astimezone(dt.timezone.utc)
     natal = chart(julday(birth_utc), a.birth_lat, a.birth_lon, hsys)
     sun0 = natal["bodies"]["sun"]["lon"]
@@ -168,8 +319,16 @@ def main():
     solar = chart(j, a.sr_lat, a.sr_lon, hsys)
     for key, b in solar["bodies"].items():
         b["natal_house"] = house_of(b["lon"], natal["cusps"])
-    sr_tz = ZoneInfo(a.sr_tz)
     names = {k: (ru if L == "ru" else en) for k, _, ru, en in BODIES}
+    cal = day_calendar(sr_utc, sr_tz)
+    if a.json:
+        write_json_exclusive(a.json, {
+            "metadata": provenance(a), "input": vars(a),
+            "birth_utc": birth_utc.isoformat(), "natal": natal,
+            "solar_return_utc": sr_utc.isoformat(),
+            "solar_return_local": sr_utc.astimezone(sr_tz).isoformat(),
+            "solar": solar, "aspects": aspects(solar["bodies"]), "days": cal,
+        })
 
     T = (lambda ru, en: ru if L == "ru" else en)
     print(T("=== НАТАЛЬНАЯ КАРТА ===", "=== NATAL CHART ==="))
@@ -181,9 +340,9 @@ def main():
     print("\n" + T("=== МОМЕНТ СОЛЯРА ===", "=== SOLAR RETURN MOMENT ==="))
     print(T("Солнце возвращается в", "Sun returns to"), fmt_lon(sun0, L))
     print("  UTC:", sr_utc.strftime("%Y-%m-%d %H:%M:%S"))
-    print(f"  {a.sr_tz}:", rmin(sr_utc.astimezone(sr_tz)).strftime("%Y-%m-%d %H:%M"))
-    for tz in a.extra_tz:
-        print(f"  {tz}:", rmin(sr_utc.astimezone(ZoneInfo(tz))).strftime("%Y-%m-%d %H:%M"))
+    print(f"  {a.sr_tz}:", rmin(sr_utc.astimezone(sr_tz)).strftime("%Y-%m-%d %H:%M %z"))
+    for tz, zone in extra_zones.items():
+        print(f"  {tz}:", rmin(sr_utc.astimezone(zone)).strftime("%Y-%m-%d %H:%M %z"))
 
     print("\n" + T("=== КАРТА СОЛЯРА ===", "=== SOLAR RETURN CHART ==="))
     print("ASC", fmt_lon(solar["asc"], L), "| MC", fmt_lon(solar["mc"], L))
@@ -196,20 +355,11 @@ def main():
     for x in aspects(solar["bodies"]):
         print(f"  {names[x['a']]} {x['aspect_ru'] if L=='ru' else x['aspect']} {names[x['b']]} ({x['orb']}°)")
 
-    cal = day_calendar(sr_utc, sr_tz)
     print("\n" + T("=== 24 СУТОК ===", "=== 24-DAY CALENDAR ==="))
     for d in cal:
-        s = rmin(dt.datetime.fromisoformat(d["start"])).strftime("%d.%m %H:%M")
-        e = rmin(dt.datetime.fromisoformat(d["end"])).strftime("%d.%m %H:%M")
+        s = rmin(dt.datetime.fromisoformat(d["start"]).astimezone(sr_tz)).strftime("%d.%m %H:%M %z")
+        e = rmin(dt.datetime.fromisoformat(d["end"]).astimezone(sr_tz)).strftime("%d.%m %H:%M %z")
         print(f"  {d['day']:>3} | {s} → {e} | {T('дом','house')} {d['house']}")
-
-    if a.json:
-        with open(a.json, "w", encoding="utf-8") as f:
-            json.dump({"input": vars(a), "birth_utc": birth_utc.isoformat(), "natal": natal,
-                       "solar_return_utc": sr_utc.isoformat(),
-                       "solar_return_local": sr_utc.astimezone(sr_tz).isoformat(),
-                       "solar": solar, "aspects": aspects(solar["bodies"]), "days": cal},
-                      f, ensure_ascii=False, indent=1)
 
 
 if __name__ == "__main__":

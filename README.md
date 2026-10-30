@@ -1,85 +1,114 @@
-# Solar Return skill for Claude · Навык «Соляр» для Claude
+# Соляр · Solar Return
 
-**RU** · [EN](#english)
+**Навык AstroEmpathy для Claude:** момент возвращения Солнца, карта для выбранного места и календарь 12 суток до / 12 суток после. Русский и английский. Версия **0.2.0**.
 
-Бесплатный навык для Claude: рассчитывает ваш соляр — точную минуту, когда Солнце возвращается в положение рождения, — строит карту года для места, где вы его встречаете, и составляет календарь 24 суток: 12 суток закрытия старого года и 12 суток открытия нового. На выходе — понятный отчёт о темах года и о том, как прожить эти дни.
+## Ссылка, которой можно поделиться
 
-Расчёт точный: Swiss Ephemeris, с учётом исторических часовых поясов и летнего времени.
+**[github.com/tvildanov/solar-return-skill](https://github.com/tvildanov/solar-return-skill)** — инструкция и актуальная версия в одном месте.
 
-## Как установить
+**[Скачать solar-return.zip](https://github.com/tvildanov/solar-return-skill/raw/main/solar-return.zip)** · [Контрольная сумма SHA-256](solar-return.zip.sha256)
 
-### В приложении Claude (claude.ai, компьютер или телефон)
+Ссылка на ZIP остаётся прежней при обновлениях. Она ведёт на текущую версию `main`, а не на неизменяемый релиз. Для воспроизводимости сохраняйте ZIP и его контрольную сумму или используйте ссылку с конкретным SHA коммита вместо `main`. Сокращатель стороннего сервиса не нужен.
 
-1. Скачайте [solar-return.zip](https://github.com/tvildanov/solar-return-skill/raw/main/solar-return.zip).
-2. В Claude откройте **Customize → Skills** и загрузите этот ZIP.
-3. Убедитесь, что в настройках включено выполнение кода (code execution) — без него навык не сможет посчитать карту.
-4. Напишите в чате: «Рассчитай мой соляр» — и ответьте на вопросы о дате, времени и месте рождения и о месте, где встретите соляр.
+## Установка в Claude — без терминала
 
-Подробнее: [How to create custom skills](https://support.claude.com/en/articles/12512198-how-to-create-custom-skills) · [Use skills in Claude](https://support.claude.com/en/articles/12512180-use-skills-in-claude).
+1. Скачайте **solar-return.zip** по кнопке выше. Для загрузки в Claude распаковывать его не нужно.
+2. Откройте [Customize → Skills](https://claude.ai/customize/skills), выберите добавление / загрузку навыка и загрузите ZIP.
+3. Включите навык и **выполнение кода / создание файлов** в настройках Claude.
+4. Напишите: **«Рассчитай мой соляр на 2027 год. Сначала спроси недостающие данные».**
 
-### В Claude Code
+Понадобятся дата, местное время и город рождения, нужный год и город встречи соляра. Полное имя и точный домашний адрес не нужны. Если время рождения неизвестно, точный расчёт домов невозможен: не подставляйте придуманное время.
+
+Доступность Skills, названия пунктов меню и возможность установки Python-зависимостей зависят от клиента, аккаунта и правил организации. Если на телефоне нет загрузки навыков, попробуйте веб-версию. Это не универсальный установщик для всех чат-ботов: обычная загрузка ZIP в диалог ChatGPT или другого сервиса не означает установку навыка.
+
+Официальные инструкции: [Skills в Claude](https://support.claude.com/en/articles/12512180-use-skills-in-claude) · [Формат ZIP](https://support.claude.com/en/articles/12512198-how-to-create-custom-skills).
+
+## Claude Code / запуск на своём компьютере
+
+Требуется Python 3.9+ с `venv`; для первого запуска предпочтителен Python 3.11, для которого опубликованы готовые wheels зависимости. Приведённые команды — для macOS/Linux; Windows не проверен.
+
+Сначала скачайте и просмотрите исходники. Следующие команды устанавливают Python-пакеты из PyPI; выполняйте их только если доверяете источнику:
 
 ```bash
-git clone https://github.com/tvildanov/solar-return-skill
-cp -r solar-return-skill/solar-return ~/.claude/skills/
-pip install pyswisseph
+git clone https://github.com/tvildanov/solar-return-skill.git
+cd solar-return-skill
+python3 -m venv .venv
+.venv/bin/python -m pip install -r solar-return/requirements.txt
 ```
 
-### Только скрипт расчёта
+Расчёт без установки навыка в Claude Code (вымышленные данные):
 
 ```bash
-pip install pyswisseph
-python3 solar-return/scripts/solar_return.py \
-  --birth "1990-05-21 14:30" --birth-tz Europe/Moscow --birth-lat 55.7558 --birth-lon 37.6173 \
-  --year 2026 --sr-tz Europe/Moscow --sr-lat 55.7558 --sr-lon 37.6173 --lang ru
+.venv/bin/python solar-return/scripts/solar_return.py \
+  --birth "1990-05-21 14:30" --birth-tz Europe/Moscow \
+  --birth-lat 55.7558 --birth-lon 37.6173 \
+  --year 2027 --sr-tz Europe/Moscow \
+  --sr-lat 55.7558 --sr-lon 37.6173 --lang ru
 ```
 
-## Что внутри
+Для личного навыка Claude Code скопируйте папку `solar-return` в `~/.claude/skills/`. **Если такая папка уже существует, сначала сохраните её копию; не объединяйте две версии.**
 
-- `solar-return/SKILL.md` — инструкции для Claude: какие данные спросить, как считать, как написать отчёт.
-- `solar-return/scripts/solar_return.py` — расчёт натала, момента соляра, карты соляра, аспектов и 24 суток.
+```bash
+mkdir -p ~/.claude/skills
+if [ ! -e ~/.claude/skills/solar-return ]; then
+  cp -R solar-return ~/.claude/skills/
+else
+  printf 'Уже установлен: сохраните старую папку перед обновлением.\n'
+fi
+```
 
-Навык не хранит и никуда не отправляет ваши данные: всё считается в вашей сессии с Claude.
+Откройте Claude Code и вызовите `/solar-return`; укажите путь к созданной `.venv/bin/python`. Навык содержит инструкции, а не готовую Python-среду. Для облачных сессий и Cowork действуют отдельные правила загрузки — см. [документацию Claude Code](https://code.claude.com/docs/en/skills).
 
-## Поддержать проект
+**Не используйте `sudo pip` или `--break-system-packages`.** Если установка заблокирована, попросите администратора разрешить изолированную среду; не обходите ограничения.
 
-Навык сделан командой [AstroEmpathy](https://astroempathy.org). Если он оказался полезен — поставьте звезду ⭐ репозиторию и расскажите друзьям.
+## Что именно считается
 
-<!-- DONATE: ссылка для донатов будет добавлена -->
+- Swiss Ephemeris через `pyswisseph`, встроенный режим **Moshier**, без скачивания файлов эфемерид.
+- Тропическая геоцентрическая долгота Солнца; дома **Placidus** по умолчанию, также можно явно выбрать **Koch** (`--house-system K`) или **Whole Sign** (`--house-system W`).
+- IANA-часовые пояса. Системная база зон имеет приоритет; закреплённый пакет `tzdata` служит резервным источником. Исторические данные зависят от установленной базы зон; они не заменяют проверку исходного свидетельства о рождении.
+- Допустимый диапазон года в интерфейсе: 2–2999; это не обещание одинаковой исторической точности на всём диапазоне. Широты строго между −90° и +90°, долготы от −180° до +180°.
+- Даты интерпретируются в григорианском календаре; даты старого стиля нужно предварительно перевести. Исторические расчёты требуют отдельной проверки.
+- 24 последовательных интервала **по 24 часа в UTC**. При переводе часов их местное время начала может измениться.
 
-## Лицензия
+Результат вычисления не делает астрологические интерпретации научно подтверждёнными прогнозами. Это материал для размышления, не основание откладывать лечение, юридические сроки, платежи или важные решения. Точность результата ограничена исходным временем рождения и выбранными допущениями.
 
-[GNU AGPL v3](LICENSE). Расчёты используют [Swiss Ephemeris](https://www.astro.com/swisseph/) (© Astrodienst AG) через [pyswisseph](https://github.com/astrorigin/pyswisseph), которые распространяются под AGPL. Астрология здесь — инструмент размышления, а не предсказание судьбы.
+## Личные данные и безопасность
+
+Сам скрипт не выполняет сетевых запросов. Но введённые в Claude данные обрабатываются сервисом по его условиям; при веб-поиске или геокодировании город может передаваться соответствующему сервису. Не утверждайте, что «данные никуда не отправляются».
+
+По умолчанию расчёт печатается в терминал/сессию и может остаться в истории чата или логах. Параметр `--json` **создаёт локальный файл, содержащий исходные дату, время и координаты**. Не публикуйте такие файлы и не добавляйте их в Git. Удаляйте по необходимости с учётом правил платформы. Не передавайте чужие персональные данные без согласия.
+
+## Если что-то не работает
+
+- **`pyswisseph is not installed`**: используйте Python из той же `.venv`, где установлены зависимости.
+- **Не найден часовой пояс**: проверьте IANA-имя (`Europe/Moscow`, не `MSK`) и наличие `tzdata`.
+- **Время попало в перевод часов**: несуществующее местное время отклоняется; для повторяющегося часа уточните смещение UTC и выберите `--birth-fold 0` или `1`.
+- **Placidus не рассчитывается у полярного круга**: после обсуждения допущения явно выберите `--house-system W`. Скрипт не меняет систему домов молча.
+- **JSON уже существует**: выберите новое имя, чтобы не затереть предыдущий результат.
+
+## Состав и проверка
+
+`solar-return/` содержит `SKILL.md`, скрипт, закреплённые зависимости, установочную памятку, версию и копию лицензии. Исходный ZIP собирается только из явного списка файлов, без результатов расчётов.
+
+```bash
+# Только упаковка и проверка структуры — без запуска калькулятора:
+python3 tools/package_skill.py --check
+# Тесты калькулятора — только после установки зависимостей и доверия к коду:
+.venv/bin/python -m unittest discover -s tests -v
+```
+
+Проверка на настоящих интерфейсах Claude и на каждой ОС отдельно требуется перед заявлением о совместимости. Успешная сборка ZIP этого не доказывает.
+
+## Авторство и лицензия
+
+Сделано командой **[AstroEmpathy](https://astroempathy.org)**. Сохраняется исходная [GNU AGPL v3](LICENSE) и авторское уведомление в скрипте. Зависимость [pyswisseph](https://pypi.org/project/pyswisseph/) использует [Swiss Ephemeris](https://www.astro.com/swisseph/) (Astrodienst AG). Зависимости не включены в ZIP и устанавливаются отдельно; их собственные лицензии сохраняют силу. При распространении модификаций сохраняйте лицензию и предоставляйте соответствующий исходный код согласно её условиям.
 
 ---
 
-## English
+## English quick start
 
-A free skill for Claude that calculates your **solar return** — the exact minute the Sun comes back to its birth position — casts the chart of the year for the place where you meet it, and builds a **24-day calendar**: 12 days closing the old year and 12 days opening the new one. You get a readable report on the themes of the year and how to live those days.
+Share **[the project page](https://github.com/tvildanov/solar-return-skill)**. Download **[solar-return.zip](https://github.com/tvildanov/solar-return-skill/raw/main/solar-return.zip)**, upload it through Claude's **Customize → Skills**, enable it and code execution, then ask: **“Calculate my solar return for 2027; ask for missing details first.”** Availability depends on the client and account; this is not a universal installer for every AI product.
 
-Precise calculation: Swiss Ephemeris, with historical time zones and daylight saving applied.
+For local use, review the source, create a Python virtual environment, install `solar-return/requirements.txt` with that environment's Python, then run `solar-return/scripts/solar_return.py --help`. Do not modify system Python. `pyswisseph` uses Swiss Ephemeris in built-in Moshier mode.
 
-### Install in the Claude app (claude.ai, desktop or mobile)
-
-1. Download [solar-return.zip](https://github.com/tvildanov/solar-return-skill/raw/main/solar-return.zip).
-2. In Claude open **Customize → Skills** and upload the ZIP.
-3. Make sure code execution is enabled — the skill needs it to compute the chart.
-4. Ask: "Calculate my solar return", then answer the questions about your birth data and where you will be on your birthday.
-
-More: [How to create custom skills](https://support.claude.com/en/articles/12512198-how-to-create-custom-skills) · [Use skills in Claude](https://support.claude.com/en/articles/12512180-use-skills-in-claude).
-
-### Install in Claude Code
-
-```bash
-git clone https://github.com/tvildanov/solar-return-skill
-cp -r solar-return-skill/solar-return ~/.claude/skills/
-pip install pyswisseph
-```
-
-### Support
-
-Made by [AstroEmpathy](https://astroempathy.org). If it helped you, star ⭐ the repo and share it.
-
-### License
-
-[GNU AGPL v3](LICENSE). Uses the [Swiss Ephemeris](https://www.astro.com/swisseph/) (© Astrodienst AG) via [pyswisseph](https://github.com/astrorigin/pyswisseph), both AGPL. Astrology here is a tool for reflection, not a prediction of fate.
+Birth time and location are personal data. The calculator itself makes no network requests, but the AI host and any geocoder process the information you give them. `--json` stores your inputs on disk; chat and terminal logs may also retain them. Astrology is used for reflection, not evidence-based prediction or medical, legal or financial decisions. Licensed under GNU AGPL v3; keep the license and applicable source obligations when redistributing.
