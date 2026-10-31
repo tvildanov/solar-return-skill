@@ -15,6 +15,7 @@ FILES = (
     'solar-return/SKILL.md',
     'solar-return/VERSION',
     'solar-return/requirements.txt',
+    'solar-return/references/observation.md',
     'solar-return/scripts/solar_return.py',
 )
 

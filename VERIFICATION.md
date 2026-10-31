@@ -1,4 +1,21 @@
-# Version 0.2.1 — compatibility and limited accuracy verification
+# Version 0.2.2 — optional observation protocol
+
+Date: **2026-10-31**. Adds a short, author-approved AstroEmpathy observation adaptation: calculated data, symbolic themes and reported body/emotion/attention experience stay separate. Participation, every entry and sharing are optional. There is no causal or medical claim, new data collection or automatic note storage.
+
+## Passed for this version
+
+- **32/32 synthetic tests** with the system IANA database (1.476 seconds), and **32/32** with pinned `tzdata` forced (1.463 seconds). Real `pyswisseph==2.10.3.2`; isolated Linux x86-64 / Python 3.12.14.
+- All **18 calculator functions are AST-identical to 0.2.1**; only the version constant/comment changed. Existing recorded JPL Sun cases pass offline; no fresh external astronomy comparison was performed for this documentation release.
+- The observation reference is linked from `SKILL.md`, included byte-for-byte in both archives, and copied by the existing three-host installer tests in temporary projects. The canonical skill now has a seven-file allowlist.
+- Both deterministic ZIPs match their source and SHA-256. Each extracted archive executes a synthetic January-1 case, gives the same result/24-day JSON and includes the observation reference.
+- Skill frontmatter validator, Python 3.9 grammar parsing, official Agent Plugins manifest schema and changed documentation's local links pass.
+- Independent instruction review covered calculation-only, no sensation, skipped entries, causal-inference requests and another person's unreported feelings. Clarified the calculation-only override and removed two predictive-sounding prompts. This is a bounded text review, not a cross-model behavioral guarantee.
+
+**Not performed:** real-account skill/plugin import, marketplace submission, macOS/Windows testing, medical/psychological validation or a new astronomical audit. No user profile was modified, no observation reports were collected, and no remote service was deployed. Prior accuracy limits and platform caveats still apply.
+
+---
+
+# Earlier 0.2.1 — compatibility and limited accuracy verification
 
 Date: **2026-10-30**. Canonical skill and plugin both package calculator 0.2.1. The solver, chart formulas and 24-day method are unchanged; anniversary-year help/output and provenance metadata are clarified.
 

@@ -5,6 +5,7 @@
 # Uses the Swiss Ephemeris via pyswisseph (AGPL), (c) Astrodienst AG.
 # Modified 2026-10-30 for distribution version 0.2.1: input/DST validation,
 # safe report creation, rounding fixes, explicit errors and provenance metadata.
+# Version metadata updated 2026-10-31 for 0.2.2; calculation logic unchanged.
 # Upstream: https://github.com/tvildanov/solar-return-skill
 """
 Calculate a solar return (the exact moment the Sun returns to its natal
@@ -42,7 +43,7 @@ except ImportError:
              "python -m pip install -r requirements.txt inside it. See INSTALL.md.")
 
 FLAGS = swe.FLG_MOSEPH | swe.FLG_SPEED   # built-in Moshier ephemeris, no data files needed
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 MIN_YEAR, MAX_YEAR = 2, 2999
 HOUSE_SYSTEMS = {"P": "Placidus", "K": "Koch", "W": "Whole Sign"}
 

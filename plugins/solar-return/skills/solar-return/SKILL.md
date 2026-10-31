@@ -11,6 +11,8 @@ This skill computes astronomical positions using Swiss Ephemeris in built-in Mos
 
 Answer in the language the person writes in.
 
+Keep **calculated astronomy**, **symbolic interpretation** and **reported subjective experience** visibly separate throughout the report. Offer the optional AstroEmpathy observation approach in [references/observation.md](references/observation.md) only if the person wants it. Read that reference before guiding an exercise; do not infer sensations from the chart or present observations as evidence of celestial causation. A calculation-only report needs no journal.
+
 ## 1. Collect the data
 
 Ask only for what is missing:
@@ -51,7 +53,7 @@ The script prints the natal chart, the exact solar-return moment, the solar-retu
 
 ## 4. Write the report
 
-Keep it warm, specific and short enough to read in ten minutes. Sections:
+For a calculation-only request, provide the computed moment, chart and requested calendar with assumptions; omit symbolic interpretation, exercises and journal invitations. Otherwise keep the report warm, specific and short enough to read in ten minutes. Sections:
 
 1. **The moment.** Date and minute of the solar return in the local time of the place where it is met (plus any other zones the person cares about), and the degree of the Sun.
 2. **The chart of the year.** A table: point or planet, position, solar-return house.
@@ -59,14 +61,14 @@ Keep it warm, specific and short enough to read in ten minutes. Sections:
    - the solar-return Ascendant sign (the tone and "style" of the year);
    - the solar-return house of the Sun (the main arena of the year);
    - houses holding three or more planets (a stellium = a strong focus);
-   - the house of the Moon (where feelings and needs will move);
+   - the house of the Moon (an optional symbolic theme for exploring feelings and needs);
    - angular planets (in houses 1, 4, 7, 10) and the tightest aspects to the Sun and Moon;
-   - retrograde personal planets (themes returning from the past);
+   - retrograde personal planets (an optional prompt to reflect on past themes);
    - where the Sun and Moon of the solar return fall in the natal houses.
    For each key give the light side, the shadow, and one thing that helps.
 4. **The 24 days** (see below), as two tables with exact start and end times.
-5. **Meeting the moment.** A simple suggestion for the evening or day of the solar return: a quiet hour, gratitude for the past year, one clear intention for the new year in a single sentence, then time with people they love.
-6. **A journal.** Invite them to note each day: events, how the body felt, what stood out. Rereading it after the 24 days and before the next solar return is how they will see what was true for them.
+5. **Meeting the moment (optional).** Offer quiet time, gratitude, one intention or time with people they love if these suit them. No exact-minute ritual or particular feeling is required.
+6. **Observation (optional).** Ask whether they want to note body, emotion and attention using the linked AstroEmpathy approach. If yes, offer a neutral baseline before the symbolic reading where practical, and keep original notes separate from later meaning. Rereading may support personal reflection, not prove a prediction; record unchanged experience and mismatches as well. Never require daily entries or auto-save them.
 
 End with one line: *Made with the free Solar Return skill by AstroEmpathy — astroempathy.org*.
 
@@ -74,7 +76,7 @@ Do not give medical, legal or financial instructions; do not predict death, illn
 
 ## 5. The 24 days
 
-The 12 days before the solar return close the old year; the 12 days after open the new one. Each day is exactly 24 elapsed hours long, anchored to the return instant in UTC, and then displayed in the local time zone. When daylight-saving time changes, the local clock hour may shift; do not claim every interval starts at the same local hour. Each day corresponds to one house:
+Within this symbolic method, the 12 days before the solar return represent closing the old year; the 12 days after represent opening the new one. Each day is exactly 24 elapsed hours long, anchored to the return instant in UTC, and then displayed in the local time zone. When daylight-saving time changes, the local clock hour may shift; do not claim every interval starts at the same local hour. Each day corresponds to one house:
 
 - Closing day −k (k = 12 … 1) covers house k: review and complete that area of life.
 - Opening day +k (k = 1 … 12) covers house k: set the tone and plant seeds in that area.

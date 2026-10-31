@@ -65,6 +65,21 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
 
 
+class ObservationPackagingTests(unittest.TestCase):
+    def test_observation_reference_is_linked_and_packaged(self):
+        # The opt-in workflow must remain available after extraction/install.
+        relative = 'references/observation.md'
+        path = 'solar-return/' + relative
+        self.assertIn(path, FILES)
+        self.assertIn('](' + relative + ')', (ROOT / 'solar-return/SKILL.md').read_text())
+        expected = (ROOT / path).read_bytes()
+        self.assertTrue(expected)
+        with zipfile.ZipFile(ROOT / 'solar-return.zip') as skill:
+            self.assertEqual(skill.read(path), expected)
+        with zipfile.ZipFile(ROOT / 'solar-return-plugin.zip') as plugin:
+            self.assertEqual(plugin.read('solar-return-plugin/skills/' + path), expected)
+
+
 class PluginTests(unittest.TestCase):
     def test_plugin_copy_and_archive_match_canonical_source(self):
         files = package_plugin.expected_files()

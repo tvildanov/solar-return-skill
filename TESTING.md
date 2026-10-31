@@ -4,7 +4,7 @@ Use synthetic dates and city-centre coordinates only; never commit generated per
 
 ## Packaging (standard library; does not execute calculator)
 
-- `python3 tools/package_skill.py` rebuilds the ZIP from an explicit six-file allowlist.
+- `python3 tools/package_skill.py` rebuilds the ZIP from an explicit seven-file allowlist.
 - `python3 tools/package_skill.py --check` checks root structure, concise frontmatter, syntax, license parity, archive/source equality and checksum.
 - Build twice: bytes must be identical. No `.venv`, caches, birth-data outputs or credentials may enter the ZIP.
 
@@ -32,3 +32,9 @@ Keep `solar-return/VERSION`, README, ZIP and SHA-256 together. Rebuild after eve
 - `python3 tools/package_plugin.py --check` rejects drift, unlisted files and stale archives.
 - `tests/test_distribution.py` exercises three host copy destinations using temporary directories, dry-run, refusal of existing installs and symlink destinations, and marketplace path resolution. No real user profile is modified.
 - `tests/test_solar_reference.py` uses recorded synthetic JPL Sun cases with explicitly limited tolerances. It is offline regression coverage, not a fresh external accuracy audit.
+
+## Optional observation instructions
+
+- Check the canonical observation reference survives skill ZIP, plugin ZIP and each temporary host install byte-for-byte.
+- Review behavior on a calculation-only request, “I felt nothing”, a skipped entry, a request to prove causation, and a request to infer someone else’s sensations. The assistant should preserve choice, distinguish missing data and avoid inventing experiences or causal/health claims. These are instruction-review scenarios, not proof of behavior in every model.
+- Changing observation instructions must not change calculator functions or add note collection, network calls or automatic persistence.
