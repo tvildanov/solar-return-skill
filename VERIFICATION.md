@@ -1,3 +1,11 @@
+# Version 0.3.0 — distilled algorithm, autonomous report, relocation, rectification, web calculator
+
+- Independent Astropy/ERFA check (`tests/independent_check.py`, 5 synthetic charts): return moment ≤ 2 s; ASC, MC, Moon ≤ 0.04′.
+- Synthetic rectification check (`tests/rectify_synthetic.py`): events built from a known minute; stated time off by 23 min; the true minute is recovered exactly.
+- Year-by-area table, Moon sign of each day and launch-zone boundary matched an independently prepared reference report (private data, not included).
+- Web calculator (`docs/`) reproduces the Python moment and positions to the second (headless Chromium).
+- `python3 -m pytest tests`: 43 tests pass.
+
 # Version 0.2.2 — optional observation protocol
 
 Date: **2026-10-31**. Adds a short, author-approved AstroEmpathy observation adaptation: calculated data, symbolic themes and reported body/emotion/attention experience stay separate. Participation, every entry and sharing are optional. There is no causal or medical claim, new data collection or automatic note storage.

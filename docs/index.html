@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Соляр онлайн</title>
+<meta name="description" content="Free precise solar return calculator: chart of the year, royal and destructive degrees, 24-day calendar, prompt for any AI. By AstroEmpathy.">
+<style>
+:root{--bg:#f7f5f0;--card:#fffdf8;--ink:#1f1d1a;--muted:#6b665d;--line:#e3ddd1;--accent:#8a5a1f;--accent-ink:#fff;--soft:#f1eadc}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15130f;--card:#1e1b16;--ink:#ece6da;--muted:#a59d8f;--line:#363027;--accent:#d9a55b;--accent-ink:#1a1408;--soft:#2a241b}}
+:root[data-theme="dark"]{--bg:#15130f;--card:#1e1b16;--ink:#ece6da;--muted:#a59d8f;--line:#363027;--accent:#d9a55b;--accent-ink:#1a1408;--soft:#2a241b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:860px;margin:0 auto;padding:32px 16px 64px}
+h1{font-size:2rem;margin:0 0 6px;letter-spacing:-.01em}
+.lead{color:var(--muted);margin:0 0 24px}
+form,.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+fieldset{border:0;padding:0;margin:0 0 18px}
+legend{font-weight:650;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+label{display:flex;flex-direction:column;font-size:.85rem;color:var(--muted);gap:4px}
+input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+.row{display:flex;gap:8px;align-items:flex-end}.row label{flex:1}
+button{font:inherit;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:8px;padding:8px 14px;cursor:pointer}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:650;padding:10px 18px}
+button:disabled{opacity:.5;cursor:wait}
+.pick{display:block;width:100%;text-align:left;margin-top:4px;background:transparent}
+.check{flex-direction:row;align-items:center;gap:8px;color:var(--ink);margin:6px 0 10px}
+.note{font-size:.8rem;color:var(--muted);margin:6px 0 0}
+#msg{color:var(--accent);min-height:1.4em;margin:12px 0 0}
+#actions{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin:20px 0}
+#out{margin-top:8px}
+#out h2{font-size:1.6rem;margin:28px 0 8px}#out h3{font-size:1.2rem;margin:26px 0 8px;border-top:1px solid var(--line);padding-top:18px}#out h4{margin:18px 0 6px}
+.tw{overflow-x:auto;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}
+footer{margin-top:40px;color:var(--muted);font-size:.85rem}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+  <h1 data-i="title">Соляр онлайн</h1>
+  <p class="lead" data-i="lead"></p>
+  <form id="form">
+    <fieldset>
+      <legend data-i="birth">Рождение</legend>
+      <div class="grid">
+        <label><span data-i="date">Дата</span><input id="bDate" type="date" required></label>
+        <label><span data-i="time">Время</span><input id="bTime" type="time" required></label>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <label><span data-i="city">Город</span><input id="bCity" autocomplete="off"></label>
+        <button type="button" id="bFind" data-i="search">Найти</button>
+      </div>
+      <div id="bResults"></div>
+      <div class="grid" style="margin-top:10px">
+        <label><span data-i="lat">Широта</span><input id="bLat" inputmode="decimal" required></label>
+        <label><span data-i="lon">Долгота</span><input id="bLon" inputmode="decimal" required></label>
+        <label><span data-i="tz">Часовой пояс</span><input id="bTz" placeholder="Europe/Moscow" required></label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend data-i="meet">Где вы встретите соляр</legend>
+      <label class="check"><input type="checkbox" id="same" checked><span data-i="same">Там же, где родились</span></label>
+      <div id="meetFields" hidden>
+        <div class="row">
+          <label><span data-i="city">Город</span><input id="sCity" autocomplete="off"></label>
+          <button type="button" id="sFind" data-i="search">Найти</button>
+        </div>
+        <div id="sResults"></div>
+        <div class="grid" style="margin-top:10px">
+          <label><span data-i="lat">Широта</span><input id="sLat" inputmode="decimal"></label>
+          <label><span data-i="lon">Долгота</span><input id="sLon" inputmode="decimal"></label>
+          <label><span data-i="tz">Часовой пояс</span><input id="sTz" placeholder="America/Cancun"></label>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <div class="grid">
+        <label><span data-i="year">Год</span><input id="year" type="number" min="1801" max="2399" required></label>
+        <label><span data-i="hs">Система домов</span>
+          <select id="hs">
+            <option value="P">Placidus</option><option value="K">Koch</option><option value="W">Whole Sign</option>
+            <option value="A">Equal</option><option value="R">Regiomontanus</option><option value="C">Campanus</option>
+            <option value="O">Porphyry</option><option value="B">Alcabitius</option><option value="M">Morinus</option>
+            <option value="T">Topocentric</option><option value="V">Vehlow</option>
+          </select></label>
+        <label><span data-i="lang">Язык отчёта</span>
+          <select id="lang"><option value="ru">Русский</option><option value="en">English</option></select></label>
+      </div>
+    </fieldset>
+    <button class="primary" id="calc" disabled data-i="calc">Рассчитать</button>
+    <span class="note" id="status"></span>
+    <p class="note" data-i="geoNote"></p>
+    <p id="msg" role="status"></p>
+  </form>
+
+  <div id="actions" hidden>
+    <label><span data-i="promptLang">Язык ответа ИИ</span>
+      <select id="promptLang">
+        <option value="ru">Русский</option><option value="en">English</option><option value="es">Español</option>
+        <option value="pt">Português</option><option value="fr">Français</option><option value="de">Deutsch</option>
+        <option value="it">Italiano</option><option value="uk">Українська</option><option value="uz">O'zbek</option>
+        <option value="kk">Қазақ</option><option value="tr">Türkçe</option><option value="pl">Polski</option>
+        <option value="zh">中文</option><option value="ja">日本語</option><option value="ko">한국어</option>
+        <option value="ar">العربية</option><option value="hi">हिन्दी</option><option value="he">עברית</option>
+      </select></label>
+    <button class="primary" id="copy" data-i="copy">Скопировать запрос для любого ИИ</button>
+    <button id="download" data-i="download">Скачать отчёт</button>
+  </div>
+
+  <article id="out" class="card" aria-live="polite" hidden></article>
+
+  <footer>
+    <span data-i="footer">Код открыт: </span><a href="https://github.com/tvildanov/solar-return-skill" data-i="source">исходники на GitHub</a> ·
+    <a href="https://github.com/tvildanov/solar-return-skill#readme" data-i="skill">Навык для ИИ</a> ·
+    <a href="https://astroempathy.org">AstroEmpathy</a><br>
+    <span data-i="license"></span> Location search: Open-Meteo, GeoNames.
+  </footer>
+</main>
+<script type="module" src="app.js"></script>
+<script>
+  new MutationObserver(() => { const o = document.getElementById("out"); if (o.innerHTML.trim()) o.hidden = false; })
+    .observe(document.getElementById("out"), { childList: true });
+</script>
+</body>
+</html>

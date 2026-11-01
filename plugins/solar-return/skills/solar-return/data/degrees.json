@@ -1,0 +1,11 @@
+{
+  "description": "Royal and destructive degrees as commonly listed in Russian-language astrology. Degree numbers are 1-based within each sign. Signs without an entry have no listed degree.",
+  "sources": [
+    "https://ezoastra.com/statji/1945/46052/",
+    "https://the-day.ru/astrology/korolevskie-i-razrushitelnye-gradusy-v-astrologii-priznaki-osoboi-sudby/"
+  ],
+  "sources_note": "Both sources give identical numbers; neither names an original author. Attribution to a specific school is not confirmed.",
+  "convention_note": "Sources do not state whether 'the 13th degree' means 12°00'–12°59' (ordinal, default) or 13°00'–13°59' (exact). Use --degree-convention to choose.",
+  "royal": {"aries": 18, "gemini": 9, "leo": 7, "virgo": 25, "scorpio": 13, "capricorn": 11, "aquarius": 30},
+  "destructive": {"aries": 23, "gemini": 13, "leo": 10, "libra": 1, "scorpio": 19, "capricorn": 19, "pisces": 4}
+}

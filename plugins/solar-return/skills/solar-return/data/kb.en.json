@@ -1,0 +1,471 @@
+{
+  "lang": "en",
+  "version": "0.3.0",
+  "labels": {
+    "title": "Solar return {year}",
+    "moment": "The moment",
+    "moment_text": "The Sun returns to its birth position — {sun} — at **{local}** local time ({tz}).",
+    "utc": "UTC",
+    "other_tz": "In other time zones",
+    "adjacent_year": "The nearest return falls in an adjacent calendar year.",
+    "chart": "Chart of the year",
+    "point": "Point",
+    "position": "Position",
+    "sr_house": "SR house",
+    "natal_house": "Natal house",
+    "retro": "retro",
+    "keys": "Keys of the year",
+    "light": "Light",
+    "shadow": "Shadow",
+    "helps": "What helps",
+    "planets_in_houses": "Planets of the year by house",
+    "aspects_natal": "Solar-return to natal aspects",
+    "aspects_natal_none": "No exact aspects within the orb.",
+    "days": "The 24 days",
+    "days_intro": "Each day lasts exactly 24 hours from the moment of the solar return. The twelve days before close the old year; the twelve after open the new one. Each day corresponds to one house.",
+    "closing": "Closing the year",
+    "opening": "Opening the year",
+    "day": "Day",
+    "interval": "Start → end",
+    "house": "House",
+    "suggestion": "Suggestion",
+    "highlight": "pay attention",
+    "meeting": "Meeting the moment",
+    "journal": "Journal",
+    "method": "How this was calculated",
+    "method_text": "Swiss Ephemeris (Moshier), tropical zodiac, house system: {hs}. Birth time converted to UTC with the IANA time-zone history. Astrology here is a language for reflection, not a scientific forecast.",
+    "angles": {
+      "asc": "ASC",
+      "mc": "MC"
+    },
+    "with": "also:",
+    "principles": "Themes",
+    "degrees": "Royal and destructive degrees",
+    "degrees_intro": "In Russian-language astrology certain degrees of the signs are considered special. A royal degree traditionally strengthens and supports a planet; a destructive degree marks a vulnerable spot that needs awareness. These are symbolic accents, not verdicts.",
+    "degrees_none": "No point falls on a royal or destructive degree.",
+    "degrees_natal": "Natal chart",
+    "degrees_solar": "Solar-return chart",
+    "royal": "royal",
+    "destructive": "destructive",
+    "degrees_convention": "Degree counting: {conv}. Table: {src}.",
+    "conv_ordinal": "ordinal (13th degree = 12°00′–12°59′)",
+    "conv_exact": "exact (13° = 13°00′–13°59′)",
+    "relocation": "Where to meet the solar return",
+    "relocation_intro": "The moment of the solar return is the same everywhere on Earth, but houses and angles depend on the place. The comparison shows how the chart of the year changes from city to city.",
+    "place": "Place",
+    "asc_sign": "Ascendant",
+    "mc_sign": "MC",
+    "sun_house": "Sun house",
+    "moon_house": "Moon house",
+    "on_angles": "Planets on angles",
+    "stellium": "Stellium",
+    "scan": "Longitudes at latitude {lat}° where the SR Sun is in house {house}",
+    "scan_none": "At this latitude the SR Sun never falls in house {house}.",
+    "lon_range": "longitude",
+    "relocation_how": "How to choose: start from your intention for the year. The Sun house shows the main arena, the Ascendant the overall tone, and planets within 5° of an angle sound stronger. Weigh the options against the keys of the year and where you can really travel.",
+    "year_by_area": "The year by area",
+    "year_by_area_intro": "Each solar-return house falls on one of your natal houses: the theme of the year is lived through that area of your life.",
+    "sr_to_natal": "SR house → natal house",
+    "moon": "Moon",
+    "lunation_new": "New Moon",
+    "lunation_full": "Full Moon",
+    "lunations": "New and full moons in these days",
+    "in_day": "day {day}, house {house}",
+    "launch": "Recommendation: where to meet the solar return",
+    "launch_home": "At home ({name}) the SR Sun is in house {house}.",
+    "launch_goal": "Goal: SR Sun in house {house} ({sphere}).",
+    "launch_nearest": "Nearest point where this holds: {lat}, {lon} — about {km} km from home.",
+    "launch_none": "No such point within {km} km. Widen the radius or choose another house.",
+    "launch_already": "The goal already holds at home — no need to travel.",
+    "launch_sun_asc": "Sun exactly on the Ascendant along the same latitude: longitude {lon} (about {km} km).",
+    "launch_boundary": "Zone boundary along the same latitude: from longitude {lon} (about {km} km).",
+    "launch_angles": "Angles at the recommended point: ASC {asc}, MC {mc}.",
+    "launch_angles_ok": "No royal or destructive degrees on the angles.",
+    "launch_angles_hit": "On the angles: {hits}.",
+    "launch_plan": "Launch plan",
+    "launch_plan_text": "Arrive the day before and stay the night at the chosen place, so you are surely there at the minute of the return. At the moment itself — a quiet pause, simply presence. The next 2–3 days you can stay there or make day trips into the zone and return home in the evening.",
+    "diary": "Solar-return observation diary",
+    "diary_intro": "A solar return is read, not wished for. These 24 days are for observing and noting what really happens: events, meetings, sensations, thoughts, ideas, dreams. Each day stands for its house. Even a small thing is a signal.",
+    "diary_how_closing": "12 days before (closing): how the outgoing year completes each house. Houses run from 12 to 1.",
+    "diary_how_opening": "12 days after (opening): the tone each area will carry all year. Houses run from 1 to 12.",
+    "diary_bounds": "Day boundaries: from {time} to {time} the next day. Write in the evening or the next morning before {time}.",
+    "cheatsheet": "What belongs to each house",
+    "relate": "What belongs to this day",
+    "f_events": "Events of the day",
+    "f_feel": "Sensations · thoughts · ideas",
+    "f_close": "Conclusion — how this area is closing",
+    "f_open": "Conclusion — how this area opens for the year",
+    "goal_close": "Closing last year's goal: how the last day of house 1 was lived, who you have become, how the main theme of the past year ended.",
+    "goal_open": "Opening the new year's goal: after the pause, the first events, people and words unfold the goal of the year. Watch especially closely.",
+    "zero": "Zero degree — the switch of the year's goal",
+    "zero_text": "The most important moment of the cycle. The day before, last year's goal completes. At the minute of the return the Sun comes back to its point, and around that instant there is a short switching pause, about half an hour either side: one goal has closed, the new one has not unfolded yet. After the pause, life starts to show the goal of the new year.",
+    "zero_f1": "How last year's goal closed (the evening before)",
+    "zero_f2": "Sensation during the pause",
+    "zero_f3": "First events, people, words, thoughts after the pause",
+    "zero_f4": "A sense of the goal of the year",
+    "caution": "caution",
+    "checklist": "Checklist",
+    "checklist_items": [
+      "Choose where to meet the return and book a night there the day before",
+      "Set an alarm so you are calmly in place by the minute of the return",
+      "Print or open the observation diary",
+      "Keep notes for all 24 days"
+    ]
+  },
+  "signs": [
+    {
+      "name": "Aries",
+      "asc": "A year of beginnings and direct action. You come across as bolder and more decisive, and much will start from scratch.",
+      "light": "drive, courage, clear decisions",
+      "shadow": "haste, conflict, abandoning what you began",
+      "helps": "one main goal and physical activity to let off steam"
+    },
+    {
+      "name": "Taurus",
+      "asc": "A year of stability, body and resources. Money, comfort, beauty and tangible things come first.",
+      "light": "reliability, enjoyment of life, growing income",
+      "shadow": "stubbornness, stagnation, overspending on pleasure",
+      "helps": "a slow rhythm, care for the body, a clear budget"
+    },
+    {
+      "name": "Gemini",
+      "asc": "A year of communication, learning and movement. Lots of conversations, messages, trips and new acquaintances.",
+      "light": "curiosity, lightness, new skills",
+      "shadow": "scattering, fuss, superficiality",
+      "helps": "writing ideas down and finishing at least one"
+    },
+    {
+      "name": "Cancer",
+      "asc": "A year of home, family and feelings. Where and with whom you live, and how safe you feel, matter most.",
+      "light": "care, warmth, putting down roots",
+      "shadow": "touchiness, withdrawal, living in the past",
+      "helps": "a cosy space and honest talks with loved ones"
+    },
+    {
+      "name": "Leo",
+      "asc": "A year of self-expression and visibility. You want to create, be seen and lead.",
+      "light": "generosity, creativity, confidence",
+      "shadow": "pride, dependence on praise",
+      "helps": "a creative project that is a joy in itself"
+    },
+    {
+      "name": "Virgo",
+      "asc": "A year of order, health and craft. Time to set up routines, systems and skills.",
+      "light": "precision, usefulness, better health",
+      "shadow": "criticism, worry, perfectionism",
+      "helps": "small daily steps and kindness to yourself"
+    },
+    {
+      "name": "Libra",
+      "asc": "A year of relationships and balance. Partnership, agreements and beauty come to the fore.",
+      "light": "harmony, diplomacy, alliances",
+      "shadow": "indecision, living for others' opinions",
+      "helps": "naming your own wishes honestly in relationships"
+    },
+    {
+      "name": "Scorpio",
+      "asc": "A year of depth and transformation. Hidden things surface; relationships and resources are tested.",
+      "light": "power, passion, release of the old",
+      "shadow": "control, jealousy, crises",
+      "helps": "honesty with yourself and body work"
+    },
+    {
+      "name": "Sagittarius",
+      "asc": "A year of widening horizons. Travel, study, the search for meaning and new opportunities.",
+      "light": "optimism, growth, inspiration",
+      "shadow": "overreaching, promises not kept",
+      "helps": "a big goal broken into concrete steps"
+    },
+    {
+      "name": "Capricorn",
+      "asc": "A year of responsibility and building. Career, status and long-term goals need discipline.",
+      "light": "maturity, results, authority",
+      "shadow": "dryness, overload, fear of mistakes",
+      "helps": "a plan for the year and regular guilt-free rest"
+    },
+    {
+      "name": "Aquarius",
+      "asc": "A year of freedom and change. New ideas, friends, communities and unexpected turns.",
+      "light": "independence, originality, like-minded people",
+      "shadow": "detachment, rebellion for its own sake",
+      "helps": "a community of interest and room to experiment"
+    },
+    {
+      "name": "Pisces",
+      "asc": "A year of intuition and inner life. Sensitivity grows; inspiration, compassion and rest matter.",
+      "light": "imagination, spirituality, kindness",
+      "shadow": "confusion, illusions, escaping reality",
+      "helps": "creativity, water, sleep and clear boundaries"
+    }
+  ],
+  "planets": {
+    "sun": {
+      "name": "Sun",
+      "principle": "vitality and the main task of the year",
+      "light": "clear purpose and confidence",
+      "shadow": "self-centredness and burnout"
+    },
+    "moon": {
+      "name": "Moon",
+      "principle": "feelings, needs and daily life",
+      "light": "emotional fulfilment",
+      "shadow": "mood swings"
+    },
+    "mercury": {
+      "name": "Mercury",
+      "principle": "thoughts, words, learning and connections",
+      "light": "clear speech and useful contacts",
+      "shadow": "fuss and misunderstanding"
+    },
+    "venus": {
+      "name": "Venus",
+      "principle": "love, pleasure, beauty and money",
+      "light": "harmony and attraction",
+      "shadow": "laziness and self-indulgence"
+    },
+    "mars": {
+      "name": "Mars",
+      "principle": "energy, action and courage",
+      "light": "drive and decisiveness",
+      "shadow": "irritation and conflict"
+    },
+    "jupiter": {
+      "name": "Jupiter",
+      "principle": "growth, luck and expansion",
+      "light": "opportunities and support",
+      "shadow": "excess and overestimation"
+    },
+    "saturn": {
+      "name": "Saturn",
+      "principle": "structure, responsibility and the test of time",
+      "light": "lasting results",
+      "shadow": "limits and heaviness"
+    },
+    "uranus": {
+      "name": "Uranus",
+      "principle": "change, freedom and the unexpected",
+      "light": "renewal and breakthroughs",
+      "shadow": "instability and sudden breaks"
+    },
+    "neptune": {
+      "name": "Neptune",
+      "principle": "inspiration, intuition and dissolving boundaries",
+      "light": "dreams and compassion",
+      "shadow": "fog and illusions"
+    },
+    "pluto": {
+      "name": "Pluto",
+      "principle": "deep transformation and power",
+      "light": "rebirth and self-mastery",
+      "shadow": "crises and power struggles"
+    },
+    "node": {
+      "name": "North Node",
+      "principle": "the direction of growth",
+      "light": "moving forward",
+      "shadow": "resisting the new"
+    }
+  },
+  "houses": [
+    {
+      "sphere": "self, body, image, new beginnings",
+      "closing": "Look back on the year: who you were and what you learned.",
+      "opening": "The most important day of the year: joy, pleasant people, no negativity.",
+      "light": "strength of personality",
+      "shadow": "focusing only on yourself",
+      "helps": "caring for your body and appearance",
+      "observe": "wellbeing, appearance, first reactions, initiative, everything about yourself"
+    },
+    {
+      "sphere": "money, values, possessions, self-worth",
+      "closing": "Put your finances in order and see what truly matters.",
+      "opening": "Treat yourself and your body; don't risk money.",
+      "light": "growing income and stability",
+      "shadow": "money worries",
+      "helps": "a clear budget and respect for your work",
+      "observe": "money, purchases, belongings, food, a sense of support or lack, values"
+    },
+    {
+      "sphere": "communication, learning, close circle, short trips",
+      "closing": "Finish open conversations and sum up what you learned.",
+      "opening": "Notice which people, words and signs come to you; start learning.",
+      "light": "new knowledge and connections",
+      "shadow": "gossip and fuss",
+      "helps": "a course, writing or a blog",
+      "observe": "conversations, messages, news, short trips, learning, neighbours, siblings"
+    },
+    {
+      "sphere": "home, family, roots, parents",
+      "closing": "Call your parents, remember your ancestors, tidy your home.",
+      "opening": "Think about where and how you want to live; thank your family line.",
+      "light": "roots and support",
+      "shadow": "family arguments",
+      "helps": "a cosy home and time with family",
+      "observe": "home, parents, family, housing, the past, the sense of a nest"
+    },
+    {
+      "sphere": "love, creativity, children, joy and play",
+      "closing": "Remember what brought you joy; give thanks for love.",
+      "opening": "A celebration, a date, creativity — those who love you will show it.",
+      "light": "love and inspiration",
+      "shadow": "drama and gambling",
+      "helps": "doing something purely for pleasure",
+      "observe": "joy, falling in love, children, play, hobbies, creativity, risk"
+    },
+    {
+      "sphere": "health, work, routine, caring for others",
+      "closing": "Look at how you cared for your body; drop one bad habit.",
+      "opening": "Move a lot and set up a healthy routine.",
+      "light": "health and mastery",
+      "shadow": "overload and pettiness",
+      "helps": "movement and a calm schedule",
+      "observe": "body and health, routine, habits, order, duties, pets"
+    },
+    {
+      "sphere": "partnership, marriage, contracts, open rivals",
+      "closing": "See who truly stood by you; have an honest talk with someone close.",
+      "opening": "Watch who is who; avoid conflicts.",
+      "light": "alliances and cooperation",
+      "shadow": "opposition",
+      "helps": "spoken agreements and respected boundaries",
+      "observe": "partner, alliances, contracts, one-to-one meetings, open disputes"
+    },
+    {
+      "sphere": "crises and change, shared resources, deep transformation",
+      "closing": "Let go of what has run its course; forgive.",
+      "opening": "A day for extra care: rest, solitude, nothing risky.",
+      "light": "renewal and release",
+      "shadow": "fears and losses",
+      "helps": "honesty, forgiveness and rest",
+      "observe": "shared and other people's money, debts, intimacy, fears, strong emotions, change"
+    },
+    {
+      "sphere": "worldview, travel, higher learning, law",
+      "closing": "What did the year teach you; plan trips and study.",
+      "opening": "A good day for important signatures and meeting mentors.",
+      "light": "meaning and expansion",
+      "shadow": "dogmatism",
+      "helps": "a journey or serious study",
+      "observe": "travel, abroad, study, law, faith, big meanings"
+    },
+    {
+      "sphere": "career, status, goals, authority",
+      "closing": "Sum up your work and take a step toward your calling.",
+      "opening": "Put yourself forward and send out offers: the day shows the work of the year.",
+      "light": "recognition and results",
+      "shadow": "pressure and ambition",
+      "helps": "a clear goal and plan",
+      "observe": "work, bosses, reputation, recognition, responsibility"
+    },
+    {
+      "sphere": "friends, communities, hopes and plans",
+      "closing": "Recall the year's dreams; thank your friends.",
+      "opening": "Friends, plans, dreams — help others, but don't decide for them.",
+      "light": "support of like-minded people",
+      "shadow": "other people's expectations",
+      "helps": "a community and a bold dream",
+      "observe": "friends, like-minded people, plans, hopes, patrons, social media"
+    },
+    {
+      "sphere": "solitude, rest, inner life, letting go",
+      "closing": "Solitude, summing up the year, reflecting on successes and mistakes.",
+      "opening": "Silence, dreams, cleansing, gratitude for the road travelled.",
+      "light": "peace and intuition",
+      "shadow": "isolation and hidden fears",
+      "helps": "meditation, sleep and time alone",
+      "observe": "solitude, dreams, intuition, endings, what happens behind the scenes"
+    }
+  ],
+  "sun_house": [
+    "The main arena of the year is you. A year of a personal fresh start: a new image, new decisions, more initiative.",
+    "The main arena of the year is money and values. Time to strengthen income, resources and self-worth.",
+    "The main arena of the year is communication and learning. Many contacts, trips, texts and new skills.",
+    "The main arena of the year is home and family: a move, renovation, parents or finding your roots.",
+    "The main arena of the year is love and creativity. A year of romance, children, hobbies and joy.",
+    "The main arena of the year is work and health. Time to set up routines, skills and daily life.",
+    "The main arena of the year is partnership. Relationships, marriage, alliances and contracts come first.",
+    "The main arena of the year is deep change: crises, shared money, renewal through letting go.",
+    "The main arena of the year is widening horizons: travel, study, abroad and the search for meaning.",
+    "The main arena of the year is career. Goals, status and recognition need attention and bring results.",
+    "The main arena of the year is friends and plans: communities, like-minded people and bold dreams.",
+    "The main arena of the year is inner life. A year of preparation, solitude and quiet inner change."
+  ],
+  "moon_house": [
+    "Feelings are on show: mood strongly shapes decisions, so take good care of yourself.",
+    "Emotional calm depends on money and comfort; you long for stability.",
+    "Emotions flow through communication: talks, messages and trips matter.",
+    "The heart turns to home and family; changes at home are possible.",
+    "The heart is open to love, creativity and children; you crave joy.",
+    "Feelings are tied to work and health; a gentle routine is needed.",
+    "A partner matters emotionally; relationships become a mirror.",
+    "Deep feelings and inner change; don't keep everything inside.",
+    "The soul asks for space: travel, study, new meaning.",
+    "Feelings are tied to work and reputation; career changes are possible.",
+    "Friends and community are your emotional support.",
+    "A need for solitude and rest; intuition grows stronger."
+  ],
+  "aspects": {
+    "conjunction": {
+      "name": "conjunction",
+      "tone": "{a} and {b} merge: the theme sounds bright and concentrated",
+      "helps": "consciously direct this concentrated force into one pursuit"
+    },
+    "sextile": {
+      "name": "sextile",
+      "tone": "{a} and {b} offer an easy opportunity, if you take it",
+      "helps": "take the first step — the opportunity will not act on its own"
+    },
+    "square": {
+      "name": "square",
+      "tone": "{a} and {b} are in a tension that pushes you to act",
+      "helps": "turn the tension into concrete action, not argument"
+    },
+    "trine": {
+      "name": "trine",
+      "tone": "{a} and {b} work together, giving smooth support",
+      "helps": "don't coast: use the support for something important"
+    },
+    "opposition": {
+      "name": "opposition",
+      "tone": "{a} and {b} face each other: balance is needed, often through other people",
+      "helps": "seek balance and listen to the other side"
+    }
+  },
+  "templates": {
+    "asc_key": "Solar-return Ascendant in {sign}",
+    "sun_key": "Sun in solar-return house {house}",
+    "moon_key": "Moon in solar-return house {house}",
+    "stellium_key": "Emphasis on house {house} ({planets})",
+    "stellium_text": "Several planets gather in the area of {sphere}. This will be one of the main themes of the year.",
+    "angular_key": "{planet} in house {house} (angular)",
+    "angular_text": "{principle} — this force will be especially visible in the area of {sphere}.",
+    "retro_key": "{planet} retrograde",
+    "retro_text": "The theme of {principle} returns from the past: a time to review, finish, and revisit old people and ideas.",
+    "natal_key": "Solar-return Sun and Moon in the natal houses",
+    "natal_text": "The solar-return Sun falls in your natal house {sun} ({sun_sphere}), the Moon in natal house {moon} ({moon_sphere}). The year is lived through these areas of your life.",
+    "aspect_key": "SR {a} {aspect} natal {b}",
+    "planet_house": "{principle} — in the area of {sphere}.",
+    "meeting": "An hour before the return, find a quiet place and put your phone away. Recall the past year with gratitude and write down what you want to let go of. At the minute of the return, say one intention for the year to yourself — one sentence, in the present tense. Then spend time with people you love.",
+    "journal": "Each evening, briefly note the day's events, how your body felt and what stood out. Reread the notes after the 24 days and before your next solar return to see what proved true for you and what did not.",
+    "footer": "Made with the free Solar Return skill by AstroEmpathy — astroempathy.org",
+    "retro_helps": "finish what you started rather than rushing into the new"
+  },
+  "points": {
+    "asc": {
+      "name": "Ascendant",
+      "principle": "image and approach to life",
+      "light": "clear self-expression",
+      "shadow": "a mask instead of yourself"
+    },
+    "mc": {
+      "name": "MC",
+      "principle": "goals, career and calling",
+      "light": "moving toward goals",
+      "shadow": "pressure of status"
+    }
+  },
+  "degree_text": {
+    "royal": "{point} on a royal degree ({deg}th degree of {sign}): this force is traditionally supported and may bring recognition.",
+    "destructive": "{point} on a destructive degree ({deg}th degree of {sign}): this theme needs care and awareness."
+  }
+}

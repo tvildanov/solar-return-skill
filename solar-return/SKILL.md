@@ -1,6 +1,6 @@
 ---
 name: solar-return
-description: Calculate a solar return (соляр), yearly chart and 12-before/12-after day calendar in Russian or English. Use for explicit solar-return requests; requires Python execution.
+description: Solar return (соляр): exact moment, chart, 24-day calendar, royal degrees, where to meet it, observation diary, birth-time rectification. Needs Python.
 ---
 
 # Solar return (соляр)
@@ -50,6 +50,16 @@ python scripts/solar_return.py \
 Use `--json <new-path>` only when the user wants an export; it stores their original inputs. Do not overwrite a result file or upload it without permission. For a repeated local birth hour the script requires `--birth-fold 0` (earlier occurrence) or `1` (later); ask which UTC offset the record means. A nonexistent local time must be corrected, not silently shifted.
 
 The script prints the natal chart, the exact solar-return moment, the solar-return chart (Placidus by default; `--house-system W` for whole signs), the house of each solar-return planet in both the solar-return and the natal chart, major aspects, and the 24-day calendar. Use only these computed numbers; never estimate positions by eye. If Placidus fails at a polar latitude, explain the limitation and ask before switching explicitly to Whole Sign. State the house system, location assumptions and ephemeris mode in the report. Numerical output is not an independent accuracy certificate. UTC is approximated as UT1 and all dates use the proleptic Gregorian calendar. Historical and distant-future results need extra caution; see the repository accuracy report. Validation of the Sun does not validate every planet, node, house or interpretation.
+
+## 3a. Extra tools (use when the person asks)
+
+All rules are written out in [data/ALGORITHM.md](data/ALGORITHM.md); texts are in `data/kb.<lang>.json`. Prefer these deterministic outputs over improvised interpretation.
+
+- **Autonomous report:** add `--report` — a complete Markdown report (moment with seconds, chart, keys of the year, year by area SR house → natal house, aspects to the natal chart with `--natal-orb`, royal/destructive degrees, 24 days with the Moon sign of each day, new and full moons inside the window). Use it as the backbone and personalise around it.
+- **Observation diary:** `--diary` prints a printable diary: what belongs to each house, fields for every day, the zero-degree switch of the year's goal (closing goal on day −1, opening goal on day +1).
+- **Royal and destructive degrees:** always in `--report`. `--degree-convention ordinal|exact` (default ordinal: the 13th degree is 12°00′–12°59′). Present them as symbolic accents, not fate.
+- **Where to meet the return:** compare places with `--place "City|lat|lon"` (repeatable); scan longitudes along a latitude with `--scan-lat <lat> --goal-house <n>`; recommend the nearest point to home with `--home "Name|lat|lon" --launch-house <n> --radius-km <km>` (reports the nearest point, the zone boundary, the "Sun on Ascendant" longitude and degrees on the angles, plus a launch plan). Never label a place good or bad; let the person choose by intention.
+- **Birth-time rectification to the minute:** `python scripts/rectify.py --birth ... --birth-tz ... --birth-lat ... --birth-lon ... --window 60 --event "YYYY-MM-DD|label" ...`. Without events it shows sensitivity (how ASC/MC change and where the Ascendant changes sign). With 5–10 precisely dated major events it ranks every minute by transits of Jupiter–Pluto to the angles and solar-arc directions. Always present the result as a hypothesis for an astrologer to confirm; ask for events rather than inventing them.
 
 ## 4. Write the report
 

@@ -16,6 +16,15 @@ FILES = (
     'solar-return/VERSION',
     'solar-return/requirements.txt',
     'solar-return/references/observation.md',
+    'solar-return/data/ALGORITHM.md',
+    'solar-return/data/degrees.json',
+    'solar-return/data/kb.en.json',
+    'solar-return/data/kb.ru.json',
+    'solar-return/scripts/degrees.py',
+    'solar-return/scripts/extras.py',
+    'solar-return/scripts/rectify.py',
+    'solar-return/scripts/relocation.py',
+    'solar-return/scripts/report.py',
     'solar-return/scripts/solar_return.py',
 )
 
@@ -42,13 +51,16 @@ def build_bytes():
             if path.is_symlink():
                 raise ValueError(f'symlink forbidden: {name}')
             data = path.read_bytes()
+            if name.endswith('.json'):
+                import json
+                json.loads(data)  # data files must parse
             if name.endswith('.py'):
                 tree = ast.parse(data, filename=name)  # syntax only; never executes skill
                 versions = [ast.literal_eval(node.value) for node in tree.body
                             if isinstance(node, ast.Assign)
                             and any(isinstance(target, ast.Name) and target.id == 'VERSION'
                                     for target in node.targets)]
-                if versions != [version]:
+                if name.endswith('solar_return.py') and versions != [version]:
                     raise ValueError('calculator and VERSION disagree')
             info = zipfile.ZipInfo(name, (2020, 1, 1, 0, 0, 0))
             info.create_system = 3

@@ -5,7 +5,9 @@
 # Uses the Swiss Ephemeris via pyswisseph (AGPL), (c) Astrodienst AG.
 # Modified 2026-10-30 for distribution version 0.2.1: input/DST validation,
 # safe report creation, rounding fixes, explicit errors and provenance metadata.
-# Version metadata updated 2026-10-31 for 0.2.2; calculation logic unchanged.
+# Version metadata updated 2026-10-31 for 0.2.2.
+# Modified 2026-11-01 for 0.3.0: all Swiss Ephemeris house systems, solar-to-natal
+# aspects, autonomous Markdown report from the bundled knowledge base.
 # Upstream: https://github.com/tvildanov/solar-return-skill
 """
 Calculate a solar return (the exact moment the Sun returns to its natal
@@ -43,9 +45,15 @@ except ImportError:
              "python -m pip install -r requirements.txt inside it. See INSTALL.md.")
 
 FLAGS = swe.FLG_MOSEPH | swe.FLG_SPEED   # built-in Moshier ephemeris, no data files needed
-VERSION = "0.2.2"
+VERSION = "0.3.0"
 MIN_YEAR, MAX_YEAR = 2, 2999
-HOUSE_SYSTEMS = {"P": "Placidus", "K": "Koch", "W": "Whole Sign"}
+HOUSE_SYSTEMS = {
+    "P": "Placidus", "K": "Koch", "O": "Porphyry", "R": "Regiomontanus", "C": "Campanus",
+    "E": "Equal (Ascendant)", "D": "Equal (MC)", "W": "Whole Sign", "N": "Equal (0° Aries)",
+    "B": "Alcabitius", "M": "Morinus", "T": "Polich/Page (Topocentric)", "V": "Vehlow equal",
+    "X": "Axial rotation / Meridian", "H": "Horizon / Azimuthal", "S": "Sripati",
+}
+NATAL_POINTS = ("asc", "mc")
 
 
 def load_time_zone(name: str) -> ZoneInfo:
@@ -214,7 +222,7 @@ def house_of(lon: float, cusps) -> int:
 
 def chart(j: float, lat: float, lon: float, hsys: bytes = b"P") -> dict:
     if hsys not in tuple(x.encode("ascii") for x in HOUSE_SYSTEMS):
-        raise ValueError("Unsupported house system; choose P, K or W.")
+        raise ValueError("Unsupported house system; choose one of: " + ", ".join(HOUSE_SYSTEMS))
     try:
         cusps, ascmc = swe.houses(j, lat, lon, hsys)
     except swe.Error as exc:
@@ -240,6 +248,24 @@ def aspects(bodies: dict) -> list:
                 o = orb if ("sun" in (a, b) or "moon" in (a, b)) else orb - 2
                 if abs(d - ang) <= o:
                     res.append({"a": a, "b": b, "aspect": en, "aspect_ru": ru,
+                                "orb": round(abs(d - ang), 2)})
+    return sorted(res, key=lambda x: x["orb"])
+
+
+def natal_aspects(solar_bodies: dict, natal: dict, orb: float) -> list:
+    """Aspects from solar-return bodies to natal bodies and natal ASC/MC within one orb."""
+    targets = {k: v["lon"] for k, v in natal["bodies"].items() if k != "node"}
+    targets.update({"asc": natal["asc"], "mc": natal["mc"]})
+    res = []
+    for a, body in solar_bodies.items():
+        if a == "node":
+            continue
+        for b, lon in targets.items():
+            d = abs(body["lon"] - lon) % 360
+            d = min(d, 360 - d)
+            for ang, en, ru, _ in ASPECTS:
+                if abs(d - ang) <= orb:
+                    res.append({"solar": a, "natal": b, "aspect": en, "aspect_ru": ru,
                                 "orb": round(abs(d - ang), 2)})
     return sorted(res, key=lambda x: x["orb"])
 
@@ -296,7 +322,28 @@ def main(argv=None):
     p.add_argument("--extra-tz", action="append", default=[],
                    help="extra time zones to show the moment in (repeatable)")
     p.add_argument("--house-system", default="P", choices=tuple(HOUSE_SYSTEMS),
-                   help="P=Placidus (default), K=Koch, W=Whole Sign; no automatic fallback")
+                   help="P=Placidus (default), K=Koch, W=Whole Sign, E=Equal, R=Regiomontanus, "
+                        "C=Campanus, O=Porphyry ... (see HOUSE_SYSTEMS); no automatic fallback")
+    p.add_argument("--natal-orb", type=float, default=1.0,
+                   help="orb in degrees for solar-return-to-natal aspects (default 1.0)")
+    p.add_argument("--report", action="store_true",
+                   help="print a full Markdown report built from the bundled knowledge base instead of tables")
+    p.add_argument("--degree-convention", choices=("ordinal", "exact"), default="ordinal",
+                   help="how royal/destructive degree numbers map to longitude (default ordinal)")
+    p.add_argument("--place", action="append", default=[], metavar="NAME|LAT|LON",
+                   help="compare the solar-return chart at another place (repeatable)")
+    p.add_argument("--scan-lat", type=lambda x: coordinate(x, latitude=True),
+                   help="scan longitudes along this latitude (use with --goal-house)")
+    p.add_argument("--goal-house", type=int, choices=range(1, 13),
+                   help="house wanted for the solar-return Sun when scanning longitudes")
+    p.add_argument("--home", metavar="NAME|LAT|LON",
+                   help="home point for the launch recommendation (nearest place meeting --launch-house)")
+    p.add_argument("--launch-house", type=int, choices=range(1, 13), default=1,
+                   help="house wanted for the SR Sun in the launch recommendation (default 1)")
+    p.add_argument("--radius-km", type=float, default=300.0,
+                   help="search radius around --home in km (default 300)")
+    p.add_argument("--diary", action="store_true",
+                   help="print a printable Markdown observation diary for the 24 days")
     p.add_argument("--lang", choices=["ru", "en"], default="ru")
     p.add_argument("--json", help="create a new private JSON file containing birth/location inputs; never overwrite")
     a = p.parse_args(argv)
@@ -323,16 +370,81 @@ def run(a):
     solar = chart(j, a.sr_lat, a.sr_lon, hsys)
     for key, b in solar["bodies"].items():
         b["natal_house"] = house_of(b["lon"], natal["cusps"])
+    if not 0 <= a.natal_orb <= 5:
+        raise ValueError("--natal-orb must be between 0 and 5 degrees")
     names = {k: (ru if L == "ru" else en) for k, _, ru, en in BODIES}
     cal = day_calendar(sr_utc, sr_tz)
+    to_natal = natal_aspects(solar["bodies"], natal, a.natal_orb)
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import degrees as deg_mod
+    import relocation as rel_mod
+    deg_hits = {"natal": deg_mod.find(deg_mod.chart_points(natal), a.degree_convention),
+                "solar": deg_mod.find(deg_mod.chart_points(solar), a.degree_convention)}
+    places = [{"name": ("Место встречи" if L == "ru" else "Return location") + f" ({a.sr_tz})",
+               "lat": a.sr_lat, "lon": a.sr_lon}]
+    for item in a.place:
+        try:
+            name, lat, lon = item.rsplit("|", 2)
+            places.append({"name": name, "lat": coordinate(lat, latitude=True),
+                           "lon": coordinate(lon, latitude=False)})
+        except (ValueError, argparse.ArgumentTypeError) as exc:
+            raise ValueError(f'--place must look like "City|lat|lon": {item!r}') from exc
+    reloc = rel_mod.compare(chart, j, places, hsys) if a.place else []
+    import extras
+    hmap = extras.house_map(solar, natal)
+    moons = extras.day_moons(swe, FLAGS, julday, cal)
+    lunas = extras.lunations(swe, FLAGS, julday, from_julday,
+                             sr_utc - dt.timedelta(days=12), sr_utc + dt.timedelta(days=12))
+    for x in lunas:
+        x["day"] = extras.day_of(x["utc"], sr_utc)
+    launch = None
+    if a.home:
+        try:
+            hname, hlat, hlon = a.home.rsplit("|", 2)
+            home = {"name": hname, "lat": coordinate(hlat, latitude=True),
+                    "lon": coordinate(hlon, latitude=False)}
+        except (ValueError, argparse.ArgumentTypeError) as exc:
+            raise ValueError(f'--home must look like "Name|lat|lon": {a.home!r}') from exc
+        if not 0 < a.radius_km <= 2000:
+            raise ValueError("--radius-km must be between 0 and 2000")
+        launch = extras.launch_search(chart, j, home, a.launch_house, hsys, a.radius_km)
+        pt = launch["nearest"]
+        if pt:
+            pc = chart(j, pt["lat"], pt["lon"], hsys)
+            launch["angles"] = {"asc": pc["asc"], "mc": pc["mc"]}
+            launch["angle_degrees"] = deg_mod.find({"asc": pc["asc"], "mc": pc["mc"]}, a.degree_convention)
+    if (a.scan_lat is None) != (a.goal_house is None):
+        raise ValueError("--scan-lat and --goal-house must be used together")
+    scan = (rel_mod.scan_longitudes(chart, j, a.scan_lat, hsys, a.goal_house)
+            if a.scan_lat is not None else None)
     if a.json:
         write_json_exclusive(a.json, {
             "metadata": provenance(a), "input": vars(a),
             "birth_utc": birth_utc.isoformat(), "natal": natal,
             "solar_return_utc": sr_utc.isoformat(),
             "solar_return_local": sr_utc.astimezone(sr_tz).isoformat(),
-            "solar": solar, "aspects": aspects(solar["bodies"]), "days": cal,
+            "solar": solar, "aspects": aspects(solar["bodies"]),
+            "natal_aspects": to_natal, "days": cal, "degrees": deg_hits,
+            "relocation": reloc, "scan": scan, "house_map": hmap, "day_moons": moons,
+            "lunations": [dict(x, utc=x["utc"].isoformat()) for x in lunas], "launch": launch,
         })
+
+    extra = dict(house_map=hmap, moons=moons, lunas=lunas, launch=launch)
+    if a.diary:
+        from report import build_diary
+        print(build_diary(lang=L, year=a.year, sr_utc=sr_utc, sr_tz_name=a.sr_tz, cal=cal,
+                          moons=moons, lunas=lunas, rmin=rmin))
+        return
+    if a.report:
+        from report import build_report
+        print(build_report(lang=L, year=a.year, sun0=sun0, natal=natal, solar=solar,
+                           sr_utc=sr_utc, sr_tz_name=a.sr_tz, extra_tz=a.extra_tz,
+                           cal=cal, to_natal=to_natal, inner=aspects(solar["bodies"]),
+                           house_system=HOUSE_SYSTEMS[a.house_system],
+                           fmt_lon=fmt_lon, rmin=rmin, degrees=deg_hits,
+                           degree_convention=a.degree_convention, relocation=reloc,
+                           scan=scan, scan_lat=a.scan_lat, goal_house=a.goal_house, **extra))
+        return
 
     T = (lambda ru, en: ru if L == "ru" else en)
     print(T("=== НАТАЛЬНАЯ КАРТА ===", "=== NATAL CHART ==="))
@@ -362,6 +474,36 @@ def run(a):
     print(T("Аспекты:", "Aspects:"))
     for x in aspects(solar["bodies"]):
         print(f"  {names[x['a']]} {x['aspect_ru'] if L=='ru' else x['aspect']} {names[x['b']]} ({x['orb']}°)")
+    print(T(f"Аспекты соляра к наталу (орбис {a.natal_orb}°):",
+            f"Solar-return to natal aspects (orb {a.natal_orb}°):"))
+    pnames = dict(names, asc="ASC", mc="MC")
+    for x in to_natal:
+        print(f"  {T('соляр','SR')} {names[x['solar']]} {x['aspect_ru'] if L=='ru' else x['aspect']} "
+              f"{T('натал','natal')} {pnames[x['natal']]} ({x['orb']}°)")
+
+    print("\n" + T("=== КОРОЛЕВСКИЕ И РАЗРУШИТЕЛЬНЫЕ ГРАДУСЫ ===", "=== ROYAL AND DESTRUCTIVE DEGREES ==="),
+          f"({a.degree_convention})")
+    for chart_name, hits in deg_hits.items():
+        for h in hits:
+            print(f"  {T('натал','natal') if chart_name == 'natal' else T('соляр','SR')}: {pnames[h['point']]} "
+                  f"{fmt_lon(h['lon'], L)} — {T('королевский','royal') if h['kind'] == 'royal' else T('разрушительный','destructive')}")
+    if not any(deg_hits.values()):
+        print(T("  нет", "  none"))
+
+    if reloc:
+        print("\n" + T("=== СРАВНЕНИЕ МЕСТ ===", "=== PLACE COMPARISON ==="))
+        for r in reloc:
+            sm = r["summary"]
+            ang = ", ".join(f"{names[x['planet']]}@{x['angle']}" for x in sm["on_angles"]) or "—"
+            print(f"  {r['name']}: ASC {SIGNS[L][sm['asc_sign']]}, MC {SIGNS[L][sm['mc_sign']]}, "
+                  f"{T('Солнце','Sun')} {sm['sun_house']}, {T('Луна','Moon')} {sm['moon_house']}, {ang}")
+    if scan is not None:
+        print("\n" + T(f"=== ДОЛГОТЫ НА ШИРОТЕ {a.scan_lat}°: СОЛНЦЕ В {a.goal_house}-М ДОМЕ ===",
+                        f"=== LONGITUDES AT LAT {a.scan_lat}°: SUN IN HOUSE {a.goal_house} ==="))
+        for r in scan:
+            print(f"  {r['from']:+.0f}° … {r['to']:+.0f}°  ASC: " + ", ".join(SIGNS[L][x] for x in r["asc_signs"]))
+        if not scan:
+            print(T("  нет", "  none"))
 
     print("\n" + T("=== 24 СУТОК ===", "=== 24-DAY CALENDAR ==="))
     for d in cal:
