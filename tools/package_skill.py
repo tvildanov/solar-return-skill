@@ -17,6 +17,8 @@ FILES = (
     'solar-return/requirements.txt',
     'solar-return/references/observation.md',
     'solar-return/data/ALGORITHM.md',
+    'solar-return/data/deep.en.json',
+    'solar-return/data/deep.ru.json',
     'solar-return/data/degrees.json',
     'solar-return/data/kb.en.json',
     'solar-return/data/kb.ru.json',

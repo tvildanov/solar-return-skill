@@ -2,7 +2,7 @@
 
 **English** · **[Русский](README.ru.md)**
 
-A free solar-return toolkit by **[AstroEmpathy](https://astroempathy.org)**: the exact moment the Sun returns to its birth position, the chart of the year for the place where you meet it, and the 24-day calendar — 12 days closing the old year and 12 days opening the new one. Version **0.3.0**.
+A free solar-return toolkit by **[AstroEmpathy](https://astroempathy.org)**: the exact moment the Sun returns to its birth position, the chart of the year for the place where you meet it, and the 24-day calendar — 12 days closing the old year and 12 days opening the new one. Version **0.4.0**.
 
 ## Online calculator — nothing to install
 
@@ -29,6 +29,7 @@ Download **[solar-return.zip](https://github.com/tvildanov/solar-return-skill/ra
 | Royal and destructive degrees | in `--report`, `--degree-convention ordinal\|exact` |
 | Moon sign of each day; new and full moons within the 24 days | in `--report` and `--diary` |
 | Where to meet the return: compare cities, scan longitudes, nearest point to home with the wanted Sun house, "Sun on Ascendant" point, launch plan | `--place`, `--scan-lat --goal-house`, `--home --launch-house --radius-km` |
+| Deep layer: need, mechanism and five layers of daily life (body, feelings, thoughts, actions, reactions) for every key; the recipe of the year | in `--report` (`deep.<lang>.json`) |
 | Printable observation diary with the zero-degree switch of the year's goal | `--diary` |
 | Birth-time rectification to the minute from dated life events | `scripts/rectify.py --window 60 --event "YYYY-MM-DD\|label"` |
 

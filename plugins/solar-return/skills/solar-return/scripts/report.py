@@ -42,15 +42,16 @@ def year_keys(kb: dict, natal: dict, solar: dict, to_natal: list) -> list:
     sign = int(solar["asc"] // 30) % 12
     keys = []
 
-    def add(weight, title, text, light, shadow, helps):
+    def add(weight, title, text, light, shadow, helps, src=()):
         keys.append({"weight": weight, "title": title, "text": text,
-                     "light": light, "shadow": shadow, "helps": helps})
+                     "light": light, "shadow": shadow, "helps": helps, "src": list(src)})
 
     def dedupe(a, b):
         return a if a == b else f"{a}; {b}"
 
     s = kb["signs"][sign]
-    add(100, t["asc_key"].format(sign=s["name"]), s["asc"], s["light"], s["shadow"], s["helps"])
+    add(100, t["asc_key"].format(sign=s["name"]), s["asc"], s["light"], s["shadow"], s["helps"],
+        src=[("sign", sign)])
 
     counts = {}
     for k in STELLIUM_BODIES:
@@ -67,7 +68,8 @@ def year_keys(kb: dict, natal: dict, solar: dict, to_natal: list) -> list:
     if moon_h == sun_h:
         text += " " + kb["moon_house"][moon_h - 1]
     hh = houses[sun_h - 1]
-    add(95, title, text, hh["light"], hh["shadow"], hh["helps"])
+    add(95, title, text, hh["light"], hh["shadow"], hh["helps"],
+        src=[("planet", "sun")] + ([("planet", "moon")] if moon_h == sun_h else []) + [("house", sun_h)])
 
     for house, members in sorted(counts.items()):
         if len(members) >= 3 and house != sun_h:
@@ -77,12 +79,13 @@ def year_keys(kb: dict, natal: dict, solar: dict, to_natal: list) -> list:
                 text += " " + kb["moon_house"][moon_h - 1]
             add(90 + len(members),
                 t["stellium_key"].format(house=house, planets=", ".join(_name(kb, m) for m in members)),
-                text, hh["light"], hh["shadow"], hh["helps"])
+                text, hh["light"], hh["shadow"], hh["helps"],
+                src=[("planet", m) for m in members[:2]] + [("house", house)])
 
     if moon_h != sun_h and len(counts[moon_h]) < 3:
         hh = houses[moon_h - 1]
         add(85, t["moon_key"].format(house=moon_h), kb["moon_house"][moon_h - 1],
-            hh["light"], hh["shadow"], hh["helps"])
+            hh["light"], hh["shadow"], hh["helps"], src=[("planet", "moon"), ("house", moon_h)])
 
     for asp in to_natal:
         if asp["solar"] == "sun" and asp["natal"] == "sun":
@@ -92,14 +95,17 @@ def year_keys(kb: dict, natal: dict, solar: dict, to_natal: list) -> list:
             at = kb["aspects"][asp["aspect"]]
             add(80 - 10 * asp["orb"],
                 t["aspect_key"].format(a=a["name"], aspect=at["name"], b=b["name"]),
-                at["tone"].format(a=a["name"], b=b["name"]) + ". " +
-                f'{L["principles"]}: {a["principle"]}; {b["principle"]}.',
-                dedupe(a["light"], b["light"]), dedupe(a["shadow"], b["shadow"]), at["helps"])
+                at["tone"].format(a=f'{a["name"]} ({L["sr_short"]})', b=f'{b["name"]} ({L["natal_short"]})') + ". " +
+                f'{L["principles"]}: {dedupe(a["principle"], b["principle"])}.',
+                dedupe(a["light"], b["light"]), dedupe(a["shadow"], b["shadow"]), at["helps"],
+                src=[("aspect", asp["aspect"])] + [("planet", x) for x in (asp["solar"], asp["natal"])
+                                                   if x in kb["planets"]][:2])
 
     sn, mn = bodies["sun"]["natal_house"], bodies["moon"]["natal_house"]
     add(70, t["natal_key"], t["natal_text"].format(
         sun=sn, sun_sphere=houses[sn - 1]["sphere"], moon=mn, moon_sphere=houses[mn - 1]["sphere"]),
-        houses[sn - 1]["light"], houses[sn - 1]["shadow"], houses[sn - 1]["helps"])
+        houses[sn - 1]["light"], houses[sn - 1]["shadow"], houses[sn - 1]["helps"],
+        src=[("house", sn)] + ([("house", mn)] if mn != sn else []))
 
     for k, w in ANGULAR_WEIGHT.items():
         hh = bodies[k]["house"]
@@ -108,16 +114,102 @@ def year_keys(kb: dict, natal: dict, solar: dict, to_natal: list) -> list:
             add(w, t["angular_key"].format(planet=p["name"], house=hh),
                 t["angular_text"].format(principle=p["principle"].capitalize(),
                                          sphere=houses[hh - 1]["sphere"]),
-                p["light"], p["shadow"], houses[hh - 1]["helps"])
+                p["light"], p["shadow"], houses[hh - 1]["helps"], src=[("planet", k), ("house", hh)])
 
     for k in RETRO_KEYS:
         if bodies[k]["retro"]:
             p = kb["planets"][k]
             add(50, t["retro_key"].format(planet=p["name"]),
-                t["retro_text"].format(principle=p["principle"]), p["light"], p["shadow"], t["retro_helps"])
+                t["retro_text"].format(principle=p["principle"]), p["light"], p["shadow"], t["retro_helps"],
+                src=[("planet", k)])
 
     keys.sort(key=lambda x: -x["weight"])
     return keys[:MAX_KEYS]
+
+
+CHANNELS = ("body", "feel", "think", "act", "react")
+
+
+def load_deep(lang: str) -> dict:
+    return json.loads((DATA / f"deep.{lang}.json").read_text(encoding="utf-8"))
+
+
+def _src_label(kb, src):
+    kind, ref = src
+    if kind == "sign":
+        return f"ASC {kb['signs'][ref]['name']}"
+    if kind == "planet":
+        return kb["planets"][ref]["name"]
+    if kind == "house":
+        return f"House {ref}" if kb["lang"] == "en" else f"{ref}-й дом"
+    return kb["aspects"][ref]["name"]
+
+
+def _src_entry(deep, src):
+    kind, ref = src
+    if kind == "sign":
+        return deep["signs"][ref]
+    if kind == "planet":
+        return deep["planets"][ref]
+    if kind == "house":
+        return deep["houses"][ref - 1]
+    return None
+
+
+def deep_block(kb, deep, srcs) -> list:
+    """'How it works inside' for one key: need, mechanism, five channels, shadow root, key."""
+    D = deep["labels"]
+    srcs = list(dict.fromkeys(srcs))  # same planet on both sides of an aspect counts once
+    entries = [(s, _src_entry(deep, s)) for s in srcs]
+    entries = [(s, e) for s, e in entries if e]
+    out = [f"**{D['inside']}**", ""]
+    for s, e in entries:
+        out.append(f"- **{_src_label(kb, s)} — {D['need'].lower()}:** {e['need']}. {e['mechanism']}")
+    for s in srcs:
+        if s[0] == "aspect":
+            out.append(f"- **{kb['aspects'][s[1]]['name'].capitalize()}:** {deep['aspects'][s[1]]}")
+    out.append("")
+    for ch in CHANNELS:
+        if len(entries) == 1:
+            out.append(f"- **{D[ch]}.** {entries[0][1][ch]}")
+        else:
+            out.append(f"- **{D[ch]}**")
+            out += [f"    - {_src_label(kb, s)}: {e[ch]}" for s, e in entries]
+    roots = list(dict.fromkeys(e["shadow_root"] for _, e in entries if "shadow_root" in e))
+    keys_ = list(dict.fromkeys(e["key"] for _, e in entries if "key" in e))
+    if roots:
+        out.append(f"- **{D['shadow_root']}.** " + " ".join(roots))
+    if keys_:
+        out.append(f"- **{D['key']}.** " + " ".join(keys_))
+    return out + [""]
+
+
+def recipe_section(kb, deep, solar) -> list:
+    """The five layers of the year: ASC sign, Sun's house, Moon and Moon's house, angular planets."""
+    D = deep["labels"]
+    b = solar["bodies"]
+    srcs = [("sign", int(solar["asc"] // 30) % 12), ("house", b["sun"]["house"]), ("planet", "moon")]
+    if b["moon"]["house"] != b["sun"]["house"]:
+        srcs.append(("house", b["moon"]["house"]))
+    angular = [k for k in ANGULAR_WEIGHT if b[k]["house"] in ANGULAR_HOUSES][:2]
+    srcs += [("planet", k) for k in angular]
+    out = [f"## {D['recipe']}", "", D["recipe_intro"], ""]
+    for ch in CHANNELS:
+        out += [f"### {D[ch]}", ""]
+        for s in srcs:
+            out.append(f"- **{_src_label(kb, s)}:** {_src_entry(deep, s)[ch]}")
+        out.append("")
+    return out
+
+
+def observe_section(kb, deep) -> list:
+    D, L = deep["labels"], kb["labels"]
+    out = [f"### {D['observe5']}", "",
+           f"| {L['house']} | {D['body']} | {D['feel']} | {D['think']} | {D['act']} | {D['react']} |",
+           "| --- | --- | --- | --- | --- | --- |"]
+    for i, o in enumerate(deep["house_observe"], 1):
+        out.append(f"| {i} | " + " | ".join(o[ch] for ch in CHANNELS) + " |")
+    return out + [""]
 
 
 def highlighted_houses(solar: dict) -> dict:
@@ -225,6 +317,8 @@ def launch_section(kb, launch, fmt_lon, lang) -> list:
 
 def build_diary(*, lang, year, sr_utc, sr_tz_name, cal, moons, lunas, rmin) -> str:
     kb = load_kb(lang)
+    deep = load_deep(lang)
+    D = deep["labels"]
     L, houses = kb["labels"], kb["houses"]
     tz = ZoneInfo(sr_tz_name)
     hhmm = rmin(sr_utc.astimezone(tz)).strftime("%H:%M")
@@ -255,8 +349,11 @@ def build_diary(*, lang, year, sr_utc, sr_tz_name, cal, moons, lunas, rmin) -> s
         if d["day"] == 1:
             res += [f"★ {L['goal_open']}", ""]
         close = L["f_close"] if d["phase"] == "closing" else L["f_open"]
-        for f in (L["f_events"], L["f_feel"], close):
-            res += [f"**{f}:**", "", "&nbsp;", "", "&nbsp;", ""]
+        res += [f"**{L['f_events']}:**", "", "&nbsp;", "", "&nbsp;", ""]
+        obs = deep["house_observe"][h - 1]
+        for ch in CHANNELS:
+            res += [f"**{D[ch]}** — *{obs[ch]}*:", "", "&nbsp;", ""]
+        res += [f"**{close}:**", "", "&nbsp;", "", "&nbsp;", ""]
         return res
 
     out += [f"## {L['closing']}", ""]
@@ -278,6 +375,7 @@ def build_report(*, lang, year, sun0, natal, solar, sr_utc, sr_tz_name, extra_tz
                  scan_lat=None, goal_house=None, house_map=None, moons=None,
                  lunas=None, launch=None) -> str:
     kb = load_kb(lang)
+    deep = load_deep(lang)
     L, t, houses = kb["labels"], kb["templates"], kb["houses"]
     tz = ZoneInfo(sr_tz_name)
     local = rmin(sr_utc.astimezone(tz))
@@ -310,7 +408,9 @@ def build_report(*, lang, year, sun0, natal, solar, sr_utc, sr_tz_name, extra_tz
                 f"- **{L['light']}:** {k['light']}",
                 f"- **{L['shadow']}:** {k['shadow']}",
                 f"- **{L['helps']}:** {k['helps']}", ""]
+        out += deep_block(kb, deep, k["src"])
 
+    out += recipe_section(kb, deep, solar)
     if house_map:
         out += house_map_section(kb, house_map)
 
@@ -329,7 +429,7 @@ def build_report(*, lang, year, sun0, natal, solar, sr_utc, sr_tz_name, extra_tz
             a, b = _info(kb, asp["solar"]), _info(kb, asp["natal"])
             at = kb["aspects"][asp["aspect"]]
             out.append(f"- **{t['aspect_key'].format(a=a['name'], aspect=at['name'], b=b['name'])}** "
-                       f"({asp['orb']}°): " + at["tone"].format(a=a["name"], b=b["name"]) + ".")
+                       f"({asp['orb']}°): " + at["tone"].format(a=f"{a['name']} ({L['sr_short']})", b=f"{b['name']} ({L['natal_short']})") + ".")
     else:
         out.append(L["aspects_natal_none"])
     out.append("")
@@ -365,6 +465,7 @@ def build_report(*, lang, year, sun0, natal, solar, sr_utc, sr_tz_name, extra_tz
             out.append(f"| {day} | {s} → {e} | {h}: {houses[h-1]['sphere']} | {moon} | {houses[h-1][phase]}{note} |")
         out.append("")
 
+    out += observe_section(kb, deep)
     out += [f"## {L['meeting']}", "", t["meeting"], "",
             f"## {L['journal']}", "", t["journal"], "",
             f"## {L['method']}", "", L["method_text"].format(hs=house_system), "",

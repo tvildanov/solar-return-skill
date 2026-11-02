@@ -147,7 +147,7 @@ class CLITests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             data = json.loads(output.read_text(encoding="utf-8"))
             self.assertEqual(len(data["days"]), 24)
-            self.assertEqual(data["metadata"]["calculator_version"], "0.3.0")
+            self.assertEqual(data["metadata"]["calculator_version"], "0.4.0")
             self.assertEqual(data["metadata"]["ephemeris"], "Moshier (Swiss Ephemeris)")
             self.assertEqual(data["metadata"]["house_system"], "P")
             self.assertIn("tzdata_package_version", data["metadata"])
@@ -208,7 +208,7 @@ class CLITests(unittest.TestCase):
         result = subprocess.run([sys.executable, str(SCRIPT), "--version"],
                                 text=True, capture_output=True, check=False)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("0.3.0", result.stdout)
+        self.assertIn("0.4.0", result.stdout)
         self.assertEqual(sr.VERSION, (ROOT / "solar-return/VERSION").read_text().strip())
 
 

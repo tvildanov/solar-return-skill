@@ -110,7 +110,9 @@
       "Set an alarm so you are calmly in place by the minute of the return",
       "Print or open the observation diary",
       "Keep notes for all 24 days"
-    ]
+    ],
+    "sr_short": "SR",
+    "natal_short": "natal"
   },
   "signs": [
     {

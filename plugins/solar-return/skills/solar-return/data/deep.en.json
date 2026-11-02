@@ -1,0 +1,193 @@
+{
+  "lang": "en",
+  "labels": {
+    "inside": "How it works inside",
+    "need": "Need",
+    "mechanism": "Mechanism",
+    "body": "Body",
+    "feel": "Feelings",
+    "think": "Thoughts",
+    "act": "Actions",
+    "react": "Reactions to the world",
+    "shadow_root": "Where the shadow comes from",
+    "key": "Key to yourself",
+    "observe5": "What to observe",
+    "recipe": "The recipe of the year",
+    "recipe_intro": "Life is made of what a person senses in the body, feels, thinks, does and how they respond to the world. Below is how the themes of this year may show up in each of these five layers. It is not a prescription but a map for observation: compare it with what you notice in yourself.",
+    "layer_of": "{layer}: what may show up",
+    "from": "through",
+    "channels_hint": "Body · feelings · thoughts · actions · reactions"
+  },
+  "planets": {
+    "sun": {
+      "need": "to be yourself and feel that your life has meaning and direction",
+      "mechanism": "When the goal is clear, calm confidence and energy appear; when there is no goal, or it belongs to someone else, emptiness arises and the person starts seeking proof of their worth outside.",
+      "body": "A sense of vitality: warmth in the chest, a straight back, daytime energy. Under overload — tiredness that sleep does not fix.",
+      "feel": "Pride, enthusiasm, the wish to be seen; in the shadow — hurt when not recognised.",
+      "think": "Thoughts circle around the question \"who am I and why am I doing this\".",
+      "act": "Takes the lead role, makes decisions, leads others.",
+      "react": "Reacts sharply to disrespect and to attempts to suppress their will.",
+      "shadow_root": "The shadow comes from the fear of being insignificant: then a person proves instead of lives.",
+      "key": "Ask yourself: what am I doing because it is mine, and what to be valued?"
+    },
+    "moon": {
+      "need": "to feel safe, cared for and emotionally held",
+      "mechanism": "The Moon works automatically: body and emotions react before reason. When needs for rest, warmth and closeness are met, a person is soft and open; when not, old protective habits from childhood switch on.",
+      "body": "Sleep, appetite, stomach, sensitivity to weather and surroundings; the body follows the mood.",
+      "feel": "Tenderness, attachment, longing for home; mood swings without an obvious reason.",
+      "think": "Thoughts are coloured by the past and memory: \"how it used to be\", \"how I was received\".",
+      "act": "Cares for others, makes a home, seeks the familiar and cosy.",
+      "react": "Reacts with emotion first and explains later; may close up when feeling threatened.",
+      "shadow_root": "The shadow is an unmet need for care that turns into resentment or control.",
+      "key": "Notice when a reaction is older than the situation and ask: what do I actually need right now?"
+    },
+    "mercury": {
+      "need": "to understand, put things into words and be understood",
+      "mechanism": "The mind sorts impressions and builds explanations from them. When information is plentiful and chaotic, the nervous system gets overexcited; with clarity and dialogue, lightness comes.",
+      "body": "Hands, breathing, nervous system: restless fingers, shallow breath under stress, inner \"noise\".",
+      "feel": "Curiosity, the thrill of finding out; in the shadow — anxiety and irritation at uncertainty.",
+      "think": "Quick connections, plans, inner dialogue, replaying conversations.",
+      "act": "Writes, calls, negotiates, learns, switches between tasks.",
+      "react": "Responds to words and tone: one careless word can hurt more than an action.",
+      "shadow_root": "The shadow appears when the mind tries to replace feeling and action with thinking.",
+      "key": "Separate facts from your own interpretations and ask more often than you guess."
+    },
+    "venus": {
+      "need": "to love and be loved, to feel beauty and the worth of life",
+      "mechanism": "Venus seeks harmony and pleasure. When a person values themselves, they choose what truly suits them; when not, they settle for less or buy love with concessions.",
+      "body": "Sensitivity to touch, taste, scent and beauty; the body wants comfort and pleasure.",
+      "feel": "Tenderness, falling in love, pleasure; in the shadow — jealousy and envy.",
+      "think": "Thoughts about what I like, who is dear to me, what something is worth.",
+      "act": "Beautifies, draws close, buys, reconciles, avoids conflict.",
+      "react": "Is drawn to the pleasant and repelled by the coarse; gives in to keep the peace.",
+      "shadow_root": "The shadow is born from doubting one's own worth: then love becomes a deal.",
+      "key": "Understand what you truly value, not what you are supposed to value."
+    },
+    "mars": {
+      "need": "to act, defend your boundaries and get what you want",
+      "mechanism": "Mars turns desire into action. If energy has an outlet, a person is decisive and brave; if action is blocked, energy turns inward as irritation, haste or fatigue.",
+      "body": "Muscles, heat, a faster pulse, the need to move; tension in the jaw and shoulders.",
+      "feel": "Excitement, courage, anger, impatience.",
+      "think": "Short, direct thoughts: \"do it\", \"win\", \"don't let them get to me\".",
+      "act": "Starts, argues, competes, takes the initiative, takes risks.",
+      "react": "Flares up quickly at obstacles and pressure; protects their own.",
+      "shadow_root": "The shadow is anger not expressed in time, or the fear of looking weak.",
+      "key": "Give energy a healthy outlet through the body and direct words before it becomes conflict."
+    },
+    "jupiter": {
+      "need": "to grow, see meaning and widen your horizons",
+      "mechanism": "Jupiter gives faith that anything is possible. That opens doors and attracts support, but the same faith can make a person overestimate their strength and take on too much.",
+      "body": "A sense of space and uplift; in excess — overeating, weight gain, exhaustion from \"too much of everything\".",
+      "feel": "Optimism, generosity, gratitude; in the shadow — overconfidence.",
+      "think": "Thoughts about the future, meaning, big opportunities and plans.",
+      "act": "Studies, travels, promises, gives generously, expands.",
+      "react": "Sees opportunities in people and events; dislikes pettiness and limits.",
+      "shadow_root": "The shadow is excess: wanting everything at once so as not to feel one's own limits.",
+      "key": "Choose one big direction and test promises with real steps."
+    },
+    "saturn": {
+      "need": "to be reliable, take responsibility and build what will last",
+      "mechanism": "Saturn shows where life asks for maturity. At first it feels like restriction, fear or heaviness; when a person accepts responsibility and acts step by step, fear turns into stability.",
+      "body": "Bones, joints, teeth, skin, chronic fatigue; a feeling of heaviness and stiffness.",
+      "feel": "Seriousness, restraint, a sense of duty; in the shadow — fear, loneliness, guilt.",
+      "think": "Thoughts about deadlines, duties, \"the right way\", possible failure.",
+      "act": "Plans, disciplines themselves, finishes things, gives up the unnecessary.",
+      "react": "Wary of the new, tests people over time, distrusts promises.",
+      "shadow_root": "The shadow is the fear of not coping, which makes a person hard on themselves and others.",
+      "key": "Turn fear into a concrete plan and give yourself credit for every step taken."
+    },
+    "uranus": {
+      "need": "to be free, to be yourself without regard for others' expectations",
+      "mechanism": "Uranus builds tension wherever life has become too tight, then releases it suddenly. If change is let in consciously, it liberates; if resisted, it arrives as a break.",
+      "body": "Nervous excitement, insomnia, sudden bursts of energy, \"electricity\" in the body.",
+      "feel": "Excitement, thirst for the new, protest; in the shadow — anxiety and detachment.",
+      "think": "Unexpected ideas and insights, thoughts like \"it can't go on like this\".",
+      "act": "Changes plans abruptly, experiments, breaks old ties.",
+      "react": "Resists pressure and rules; is drawn to unusual people.",
+      "shadow_root": "The shadow is rebellion without purpose, when freedom becomes an escape from closeness.",
+      "key": "Notice where life feels cramped and change it gradually rather than by explosion."
+    },
+    "neptune": {
+      "need": "to feel connected to something greater, inspired and whole",
+      "mechanism": "Neptune blurs boundaries. That opens intuition, compassion and creativity, but also makes a person suggestible and inclined to see what they want to see.",
+      "body": "Sensitivity to atmosphere, unexplained tiredness, the need for water and sleep, vulnerability to substances.",
+      "feel": "Tenderness, dreaminess, nostalgia, confusion.",
+      "think": "Images, dreams, intuitive hunches; clear plans are hard to hold.",
+      "act": "Creates, helps, drifts into fantasy, postpones decisions.",
+      "react": "Absorbs other people's moods; is easily enchanted and disappointed.",
+      "shadow_root": "The shadow is escaping a hard reality into illusion.",
+      "key": "Test inspiration against facts and keep your boundaries while staying open."
+    },
+    "pluto": {
+      "need": "to have power over your own life and pass through deep change",
+      "mechanism": "Pluto brings up what was pushed down: fears, dependencies, hidden strength. Resistance makes the process painful; acceptance makes it liberating.",
+      "body": "Strong bodily reactions to stress, a sense of contraction in the lower belly, deep fatigue or a surge of power.",
+      "feel": "Passion, jealousy, obsession, fear of loss; then relief.",
+      "think": "\"All or nothing\" thinking, obsessive themes, the urge to get to the bottom of things.",
+      "act": "Drops the old abruptly, fights for control, rebuilds life.",
+      "react": "Senses people's hidden motives; does not tolerate falseness or pressure.",
+      "shadow_root": "The shadow is the wish to control so as never again to feel powerless.",
+      "key": "Let go of what is dying and do not confuse strength with control."
+    },
+    "node": {
+      "need": "to move toward the new experience needed for growth",
+      "mechanism": "The North Node points in a direction that feels unfamiliar at first; old skills pull back to the known.",
+      "body": "Awkwardness and nerves when trying something new.",
+      "feel": "A mix of fear and interest.",
+      "think": "Doubts like \"I won't manage\" next to a sense of \"this is mine\".",
+      "act": "Tries new things in careful steps.",
+      "react": "Resists change until its meaning becomes clear.",
+      "shadow_root": "The shadow is getting stuck in the familiar because it feels safe.",
+      "key": "Take small steps in the unfamiliar direction."
+    }
+  },
+  "signs": [
+    {"need": "to start, act, be first", "mechanism": "The year is launched by impulse: action first, reflection later. Energy is high but burns out fast without a goal.", "body": "Plenty of energy, heat, headaches from haste and tension.", "feel": "Excitement, impatience, a quick temper.", "think": "Short and direct: what to do right now.", "act": "Takes on new things, makes quick decisions.", "react": "Responds instantly, sometimes more sharply than intended.", "shadow_root": "Haste is born from the fear of missing the moment.", "key": "Before a decision, pause for three breaths."},
+    {"need": "stability, safety and pleasure", "mechanism": "The year moves slowly and surely; change comes through the body, money and possessions.", "body": "The body asks for comfort, good food and rest; throat and neck are sensitive.", "feel": "Calm, contentment, sometimes stubbornness.", "think": "Practical: \"what will this give me\", \"is it reliable\".", "act": "Saves, settles in, holds on to the proven.", "react": "Resists pressure and haste.", "shadow_root": "Stubbornness protects against the fear of losing support.", "key": "Tell apart what gives real support from what is merely habitual."},
+    {"need": "to learn, connect and move", "mechanism": "The year runs through information and connections; many incoming signals keep the mind busy.", "body": "Restless hands, shallow breathing, a tired nervous system.", "feel": "Curiosity, lightness, sometimes anxiety.", "think": "Many thoughts at once, quick switching.", "act": "Messages, studies, travels, makes acquaintances.", "react": "Answers fast, joins conversations easily.", "shadow_root": "Busyness is a way to avoid meeting deep feeling.", "key": "Leave time each day for silence without information."},
+    {"need": "safety, home and closeness", "mechanism": "The year is lived through feelings: emotions and memory show where it is safe.", "body": "A sensitive stomach; wellbeing depends on mood.", "feel": "Tenderness, vulnerability, nostalgia.", "think": "About family, home, the past.", "act": "Cares, makes a home, protects their own.", "react": "Closes up under threat; feels first, thinks later.", "shadow_root": "Touchiness is an unmet need for care.", "key": "Care for yourself the way you care for others."},
+    {"need": "self-expression, recognition and joy", "mechanism": "The year asks you to be visible: creativity and self-confidence grow when there is someone to show them to.", "body": "Warmth in the chest, surges of strength; heart and back respond to stress.", "feel": "Pride, generosity, the wish to shine.", "think": "How to express myself, how others see me.", "act": "Creates, performs, leads, throws celebrations.", "react": "Sensitive to evaluation and attention.", "shadow_root": "Dependence on praise is the fear of being worthless without it.", "key": "Do what brings joy in itself, not for applause."},
+    {"need": "order, usefulness and craft", "mechanism": "The year runs through details: set up, improve, repair. The mind is attentive but easily turns critical.", "body": "Gut and nerves react to worry; routine helps.", "feel": "Satisfaction in work done, worry over small things.", "think": "Analysis, lists, looking for mistakes.", "act": "Organises, heals, helps in practical ways.", "react": "Notices flaws, sometimes before merits.", "shadow_root": "Criticism is the fear of not being good enough.", "key": "Praise yourself for what you did as often as you notice mistakes."},
+    {"need": "harmony, partnership and fairness", "mechanism": "The year runs through relationships: decisions are made with another person in mind.", "body": "Lower back and kidneys are sensitive to tension; the body needs a balance of effort and rest.", "feel": "A wish for peace, affection, sometimes indecision.", "think": "Weighing: \"on the one hand… on the other…\".", "act": "Negotiates, seeks compromise, creates beauty.", "react": "Smooths conflicts, adapts.", "shadow_root": "Indecision is the fear of losing the other's favour.", "key": "Say your wishes out loud before looking for a compromise."},
+    {"need": "depth, truth and inner strength", "mechanism": "The year uncovers what is hidden: old fears and resources surface and demand honesty.", "body": "Strong reactions to stress, tension in the lower belly, powerful surges of energy.", "feel": "Passion, jealousy, determination.", "think": "The urge to get to the bottom of things, suspicion.", "act": "Goes deep, changes what has run its course.", "react": "Senses falseness, does not forgive betrayal.", "shadow_root": "Control is protection against powerlessness.", "key": "Let go instead of holding on."},
+    {"need": "meaning, freedom and growth", "mechanism": "The year widens horizons: inspiration comes through the new — places, people, knowledge.", "body": "A wish for movement and space; hips and liver respond to excess.", "feel": "Optimism, enthusiasm, intolerance of routine.", "think": "About the future, meaning, big goals.", "act": "Travels, studies, preaches, promises.", "react": "Looks for opportunities, chafes at limits.", "shadow_root": "Overreaching is an escape from boring specifics.", "key": "Break the big dream into this week's steps."},
+    {"need": "results, status and reliability", "mechanism": "The year tests maturity: effort bears fruit when it is consistent.", "body": "Joints, bones, teeth; the body answers overload with stiffness.", "feel": "Seriousness, responsibility, sometimes heaviness.", "think": "Plans, deadlines, strategy.", "act": "Works, builds, takes responsibility.", "react": "Reserved, tests people over time.", "shadow_root": "Rigidity is the fear of failure.", "key": "Allow yourself rest without guilt."},
+    {"need": "freedom, originality and like-minded people", "mechanism": "The year brings change and surprises: the new arrives through people, ideas and technology.", "body": "Nervous excitement, energy swings, sensitive shins and circulation.", "feel": "Excitement, independence, sometimes detachment.", "think": "Ideas, experiments, an outside view.", "act": "Changes habits, teams up with like-minded people.", "react": "Resists pressure, values honesty.", "shadow_root": "Detachment is the fear that closeness will take away freedom.", "key": "Stay in contact while keeping your freedom."},
+    {"need": "connection, inspiration and peace", "mechanism": "The year heightens sensitivity: intuition grows, boundaries grow thinner.", "body": "A need for sleep and water, tiredness in crowds, sensitive feet.", "feel": "Compassion, dreaminess, confusion.", "think": "Images, dreams, intuition.", "act": "Creates, helps, withdraws.", "react": "Absorbs other people's emotions.", "shadow_root": "Retreating into illusion is an escape from pain.", "key": "Protect your boundaries and test dreams against facts."}
+  ],
+  "houses": [
+    {"need": "to feel yourself and your path", "mechanism": "The year's events touch you personally: your image, health, independent decisions.", "body": "Attention to appearance, tone, wellbeing.", "feel": "A wish to start with a clean slate.", "think": "Who I am and who I want to be.", "act": "Changes appearance, takes initiative.", "react": "Reacts more strongly to how others see them."},
+    {"need": "support and self-worth", "mechanism": "The year ties self-worth to money and things: what you value is what you attract.", "body": "Pleasure in food, things, comfort; throat and neck.", "feel": "Calm when there is enough, anxiety when there is not.", "think": "What am I worth, what can I rely on.", "act": "Earns, spends, saves, settles in.", "react": "Sensitive to money and respect for their work."},
+    {"need": "to understand and be understood", "mechanism": "The year is lived through words, news, neighbours, siblings, short trips.", "body": "Lots of movement, strain on nerves and breathing.", "feel": "Curiosity and liveliness.", "think": "Many conversations, in the head and aloud.", "act": "Studies, writes, travels, negotiates.", "react": "Responds quickly to information."},
+    {"need": "roots, home and emotional safety", "mechanism": "The year touches the foundation of life: housing, family, parents, a sense of one's place.", "body": "Wellbeing depends on the atmosphere at home.", "feel": "Nostalgia, tenderness, sometimes family worry.", "think": "About home, the past, family.", "act": "Works on the home, attends to family.", "react": "Protects home and loved ones."},
+    {"need": "joy, love and creativity", "mechanism": "The year opens the heart: pleasure, play, love and children matter.", "body": "A surge of strength from joy, warmth in the chest.", "feel": "Falling in love, delight, sometimes drama.", "think": "What I like, what I want to create.", "act": "Creates, flirts, plays, celebrates.", "react": "Responds to beauty and talent."},
+    {"need": "order, health and usefulness", "mechanism": "The year is lived through the everyday: work, routine, body, duties.", "body": "The body signals overload more loudly; routine helps.", "feel": "Satisfaction from order, irritation at chaos.", "think": "Lists, tasks, optimisation.", "act": "Works, takes care of health, organises daily life.", "react": "Notices flaws in the surroundings."},
+    {"need": "partnership and meeting the other", "mechanism": "The year is lived through other people: partners become a mirror.", "body": "Wellbeing depends on the quality of relationships.", "feel": "A pull toward closeness and cooperation; sometimes opposition.", "think": "What the partner thinks, how to agree.", "act": "Forms alliances and contracts, clarifies relationships.", "react": "Reacts more strongly to the behaviour of those close."},
+    {"need": "depth and renewal", "mechanism": "The year leads through crisis to renewal: what has run its course leaves.", "body": "Strong stress reactions; recovery matters.", "feel": "Intensity, fear of loss, then relief.", "think": "About trust, control, shared resources.", "act": "Deals with debts, shared money, secrets.", "react": "Sees people's hidden motives."},
+    {"need": "meaning and a wider world", "mechanism": "The year widens the view: travel, study, another culture.", "body": "A wish for movement and space.", "feel": "Inspiration, thirst for the new.", "think": "About meaning, worldview, the future.", "act": "Travels, studies, looks for mentors.", "react": "Is drawn to people with a different outlook."},
+    {"need": "recognition and results", "mechanism": "The year tests goals and status: effort becomes visible.", "body": "Tension from responsibility; avoid overload.", "feel": "Ambition, responsibility, sometimes pressure.", "think": "About career, goals, reputation.", "act": "Works for results, takes responsibility.", "react": "Sensitive to the judgement of bosses and society."},
+    {"need": "belonging and a dream", "mechanism": "The year is lived through friends, communities and plans for the future.", "body": "Energy from being among your own people.", "feel": "Hope, friendly warmth.", "think": "About the future, dreams, like-minded people.", "act": "Joins forces, takes part in shared projects.", "react": "Values freedom and shared ideals."},
+    {"need": "peace and inner quiet", "mechanism": "The year draws inward: rest, dreams, endings and preparing the new matter.", "body": "A need for sleep and solitude, tiredness from crowds.", "feel": "Subtle sensitivity, sometimes sadness.", "think": "Inner dialogue, intuition, dreams.", "act": "Withdraws, completes things, helps quietly.", "react": "Withdraws under pressure."}
+  ],
+  "aspects": {
+    "conjunction": "Two forces act as one: they are hard to tell apart, so the theme feels very personal and strong.",
+    "sextile": "Two forces support each other easily, but the support shows up only when the person takes a step.",
+    "square": "Two needs pull in different directions and create inner tension. It is uncomfortable, but it is exactly what pushes you to act and grow.",
+    "trine": "Two forces flow together naturally; it is a talent that is easy to use and easy to overlook.",
+    "opposition": "Two needs face each other: a person often meets one of them through other people until they learn to hold both within."
+  },
+  "house_observe": [
+    {"body": "wellbeing, tone, how you look", "feel": "confidence or self-doubt", "think": "thoughts about yourself and your plans", "act": "first steps, initiative", "react": "how you meet people and how they meet you"},
+    {"body": "appetite, pleasure, comfort", "feel": "a sense of support or lack", "think": "thoughts about money and values", "act": "purchases, spending, earning", "react": "reactions to money and to how your work is valued"},
+    {"body": "movement, breathing, nervous tension", "feel": "curiosity or anxiety from news", "think": "inner dialogue, words you heard", "act": "conversations, messages, trips", "react": "how you respond to information"},
+    {"body": "how your body feels at home", "feel": "warmth, nostalgia, family feelings", "think": "thoughts about home, parents, the past", "act": "household tasks, family", "react": "reactions to loved ones and the home atmosphere"},
+    {"body": "a surge of strength from joy", "feel": "falling in love, delight, inspiration", "think": "ideas for creativity and pleasure", "act": "play, creativity, dates, children", "react": "what your heart responds to"},
+    {"body": "body signals, fatigue, routine", "feel": "satisfaction or irritation with routine", "think": "to-do lists, improvements", "act": "work, habits, health care", "react": "reactions to mess and demands"},
+    {"body": "how your body reacts near a partner", "feel": "closeness, attraction or opposition", "think": "thoughts about the other person", "act": "meetings, contracts, clarifying relationships", "react": "reactions to the behaviour of those close"},
+    {"body": "strong bodily reactions, stress", "feel": "fear, passion, relief", "think": "thoughts about trust and control", "act": "decisions about debts, shared money, change", "react": "what you sense in people beyond their words"},
+    {"body": "a wish for movement and space", "feel": "inspiration, thirst for meaning", "think": "big questions, worldview", "act": "trips, study, looking for mentors", "react": "reactions to other views and cultures"},
+    {"body": "tension from responsibility", "feel": "ambition, pride, pressure", "think": "thoughts about career and goals", "act": "work decisions, putting yourself forward", "react": "reactions to bosses and public opinion"},
+    {"body": "energy from being with your own people", "feel": "hope, friendly warmth or loneliness", "think": "dreams and plans for the future", "act": "meeting friends, shared projects", "react": "reactions to groups and communities"},
+    {"body": "sleep, fatigue, the need for quiet", "feel": "subtle feelings, sadness, peace", "think": "dreams, intuition, the inner voice", "act": "solitude, completing things", "react": "moments when you want to withdraw"}
+  ]
+}

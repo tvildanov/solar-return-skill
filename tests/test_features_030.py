@@ -105,9 +105,36 @@ class Rectification(unittest.TestCase):
         self.assertEqual(best["local"].strftime("%H:%M"), "09:17")
 
 
+class DeepLayer(unittest.TestCase):
+    def test_deep_files_complete_and_parallel(self):
+        ch = ("need", "mechanism", "body", "feel", "think", "act", "react")
+        for lang in ("ru", "en"):
+            d = json.loads((ROOT / f"solar-return/data/deep.{lang}.json").read_text())
+            self.assertEqual(len(d["signs"]), 12)
+            self.assertEqual(len(d["houses"]), 12)
+            self.assertEqual(len(d["house_observe"]), 12)
+            for e in list(d["planets"].values()) + d["signs"] + d["houses"]:
+                for c in ch:
+                    self.assertTrue(e.get(c), (lang, c))
+            for e in list(d["planets"].values()) + d["signs"]:
+                self.assertTrue(e.get("shadow_root") and e.get("key"))
+        ru = json.loads((ROOT / "solar-return/data/deep.ru.json").read_text())
+        en = json.loads((ROOT / "solar-return/data/deep.en.json").read_text())
+        self.assertEqual(set(ru["labels"]), set(en["labels"]))
+        self.assertEqual(set(ru["planets"]), set(en["planets"]))
+
+    def test_report_has_five_layers(self):
+        out = run(BASE + ["--report", "--lang", "en"])
+        for marker in ("How it works inside", "The recipe of the year", "Reactions to the world",
+                       "Where the shadow comes from", "Key to yourself", "What to observe"):
+            self.assertIn(marker, out)
+        diary = run(BASE + ["--diary", "--lang", "en"])
+        self.assertEqual(diary.count("**Body** —"), 24)
+
+
 class WebParity(unittest.TestCase):
     def test_web_data_matches_skill_data(self):
-        for name in ("kb.ru.json", "kb.en.json", "degrees.json"):
+        for name in ("kb.ru.json", "kb.en.json", "deep.ru.json", "deep.en.json", "degrees.json"):
             self.assertEqual((ROOT / "docs/data" / name).read_bytes(),
                              (ROOT / "solar-return/data" / name).read_bytes(), name)
 

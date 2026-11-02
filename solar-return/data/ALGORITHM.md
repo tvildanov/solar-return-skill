@@ -49,6 +49,16 @@ Collect candidate factors with weights, sort by weight, keep the top 7:
 
 Each key carries: text, light side, shadow side, what helps — taken from the knowledge base for the relevant sign, house, planet or aspect.
 
+## 5a. Deep layer: how each key works inside [tradition + psychology-informed description]
+
+`deep.<lang>.json` gives, for every planet, every solar-return Ascendant sign and every house:
+need → mechanism (how the need turns into feeling, thought, action and reaction) → five layers of daily life (body, feelings, thoughts, actions, reactions to the world) → where the shadow comes from → key to yourself.
+
+- Each key of the year carries its sources (sign, planets, house, aspect). The report prints the need and mechanism of every source, then the five layers side by side, so the reader sees how the forces combine or conflict.
+- "The recipe of the year" collects the five layers from the ASC sign, the Sun's house, the Moon, the Moon's house and up to two angular planets.
+- "What to observe" gives five observation prompts per house for the 24 days; the diary uses them as fields.
+- Wording stays descriptive ("may show up", "notice if"); it never claims that a planet causes a sensation.
+
 ## 6. Royal and destructive degrees [tradition]
 
 - Table (`degrees.json`), degree numbers 1–30 within a sign:
@@ -68,7 +78,7 @@ Each key carries: text, light side, shadow side, what helps — taken from the k
 
 ## 8. Report structure
 
-1. Moment (local, UTC, extra zones). 2. Chart table. 3. Keys of the year. 4. Planets by house. 5. SR→natal aspects. 6. Royal/destructive degrees. 7. Relocation (if requested). 8. The 24 days (closing and opening tables). 9. Meeting the moment. 10. Journal. 11. Method and assumptions.
+1. Moment (local, UTC, extra zones). 2. Chart table. 3. Keys of the year, each with the deep layer. 3a. The recipe of the year. 4. Planets by house. 5. SR→natal aspects. 6. Royal/destructive degrees. 7. Relocation (if requested). 8. The 24 days (closing and opening tables). 9. Meeting the moment. 10. Journal. 11. Method and assumptions.
 
 ## 9. Safety rules
 

@@ -42,7 +42,7 @@ const UI = {
   },
 };
 
-let swe, KB = {}, DEG = null, last = null;
+let swe, KB = {}, DEEP = {}, DEG = null, last = null;
 const $ = id => document.getElementById(id);
 const norm = x => ((x % 360) + 360) % 360;
 const wrap = x => ((x + 180) % 360 + 360) % 360 - 180;
@@ -150,10 +150,10 @@ const pointsOf = c => ({ ...Object.fromEntries(Object.entries(c.bodies).map(([k,
 function info(kb, k) { return kb.planets[k] || kb.points[k]; }
 function yearKeys(kb, solar, toNatal) {
   const t = kb.templates, H = kb.houses, L = kb.labels, b = solar.bodies, keys = [];
-  const add = (w, title, text, light, shadow, helps) => keys.push({ w, title, text, light, shadow, helps });
+  const add = (w, title, text, light, shadow, helps, src = []) => keys.push({ w, title, text, light, shadow, helps, src });
   const dd = (x, y) => x === y ? x : `${x}; ${y}`;
   const s = kb.signs[Math.floor(norm(solar.asc) / 30)];
-  add(100, t.asc_key.replace("{sign}", s.name), s.asc, s.light, s.shadow, s.helps);
+  add(100, t.asc_key.replace("{sign}", s.name), s.asc, s.light, s.shadow, s.helps, [["sign", Math.floor(norm(solar.asc) / 30)]]);
   const counts = {}; for (const k of STELLIUM) (counts[b[k].house] ||= []).push(k);
   const sh = b.sun.house, mh = b.moon.house;
   let title = t.sun_key.replace("{house}", sh), text = kb.sun_house[sh - 1];
@@ -161,27 +161,70 @@ function yearKeys(kb, solar, toNatal) {
   if (others.length) title += ` (${L.with} ${others.map(k => kb.planets[k].name).join(", ")})`;
   if (counts[sh].length >= 3) text += " " + t.stellium_text.replace("{sphere}", H[sh - 1].sphere);
   if (mh === sh) text += " " + kb.moon_house[mh - 1];
-  add(95, title, text, H[sh - 1].light, H[sh - 1].shadow, H[sh - 1].helps);
+  add(95, title, text, H[sh - 1].light, H[sh - 1].shadow, H[sh - 1].helps, [["planet", "sun"], ...(mh === sh ? [["planet", "moon"]] : []), ["house", sh]]);
   for (const [h, m] of Object.entries(counts)) if (m.length >= 3 && +h !== sh) {
     let tx = t.stellium_text.replace("{sphere}", H[h - 1].sphere); if (+h === mh) tx += " " + kb.moon_house[mh - 1];
-    add(90 + m.length, t.stellium_key.replace("{house}", h).replace("{planets}", m.map(k => kb.planets[k].name).join(", ")), tx, H[h - 1].light, H[h - 1].shadow, H[h - 1].helps);
+    add(90 + m.length, t.stellium_key.replace("{house}", h).replace("{planets}", m.map(k => kb.planets[k].name).join(", ")), tx, H[h - 1].light, H[h - 1].shadow, H[h - 1].helps, [...m.slice(0, 2).map(k => ["planet", k]), ["house", +h]]);
   }
-  if (mh !== sh && counts[mh].length < 3) add(85, t.moon_key.replace("{house}", mh), kb.moon_house[mh - 1], H[mh - 1].light, H[mh - 1].shadow, H[mh - 1].helps);
+  if (mh !== sh && counts[mh].length < 3) add(85, t.moon_key.replace("{house}", mh), kb.moon_house[mh - 1], H[mh - 1].light, H[mh - 1].shadow, H[mh - 1].helps, [["planet", "moon"], ["house", mh]]);
   for (const a of toNatal) if (["sun", "moon"].includes(a.solar) || ["sun", "moon", "asc", "mc"].includes(a.natal)) {
     const A = info(kb, a.solar), B = info(kb, a.natal), at = kb.aspects[a.aspect];
     add(80 - 10 * a.orb, t.aspect_key.replace("{a}", A.name).replace("{aspect}", at.name).replace("{b}", B.name),
-      at.tone.replace("{a}", A.name).replace("{b}", B.name) + `. ${L.principles}: ${A.principle}; ${B.principle}.`,
-      dd(A.light, B.light), dd(A.shadow, B.shadow), at.helps);
+      at.tone.replace("{a}", `${A.name} (${L.sr_short})`).replace("{b}", `${B.name} (${L.natal_short})`) + `. ${L.principles}: ${dd(A.principle, B.principle)}.`,
+      dd(A.light, B.light), dd(A.shadow, B.shadow), at.helps,
+      [["aspect", a.aspect], ...[a.solar, a.natal].filter(x => kb.planets[x]).map(x => ["planet", x])]);
   }
   const sn = b.sun.natal_house, mn = b.moon.natal_house;
   add(70, t.natal_key, t.natal_text.replace("{sun}", sn).replace("{sun_sphere}", H[sn - 1].sphere).replace("{moon}", mn).replace("{moon_sphere}", H[mn - 1].sphere),
-    H[sn - 1].light, H[sn - 1].shadow, H[sn - 1].helps);
+    H[sn - 1].light, H[sn - 1].shadow, H[sn - 1].helps, [["house", sn], ...(mn !== sn ? [["house", mn]] : [])]);
   for (const [k, w] of Object.entries(ANGULAR_W)) { const h = b[k].house; if ([1, 4, 7, 10].includes(h)) {
     const p = kb.planets[k]; add(w, t.angular_key.replace("{planet}", p.name).replace("{house}", h),
-      t.angular_text.replace("{principle}", p.principle[0].toUpperCase() + p.principle.slice(1)).replace("{sphere}", H[h - 1].sphere), p.light, p.shadow, H[h - 1].helps); } }
+      t.angular_text.replace("{principle}", p.principle[0].toUpperCase() + p.principle.slice(1)).replace("{sphere}", H[h - 1].sphere), p.light, p.shadow, H[h - 1].helps, [["planet", k], ["house", h]]); } }
   for (const k of ["mercury", "venus", "mars"]) if (b[k].retro) { const p = kb.planets[k];
-    add(50, t.retro_key.replace("{planet}", p.name), t.retro_text.replace("{principle}", p.principle), p.light, p.shadow, t.retro_helps); }
+    add(50, t.retro_key.replace("{planet}", p.name), t.retro_text.replace("{principle}", p.principle), p.light, p.shadow, t.retro_helps, [["planet", k]]); }
   return keys.sort((x, y) => y.w - x.w).slice(0, 7);
+}
+
+const CH = ["body", "feel", "think", "act", "react"];
+function srcLabel(kb, [kind, ref]) {
+  if (kind === "sign") return `ASC ${kb.signs[ref].name}`;
+  if (kind === "planet") return kb.planets[ref].name;
+  if (kind === "house") return kb.lang === "en" ? `House ${ref}` : `${ref}-й дом`;
+  return kb.aspects[ref].name;
+}
+function srcEntry(dp, [kind, ref]) {
+  return kind === "sign" ? dp.signs[ref] : kind === "planet" ? dp.planets[ref] : kind === "house" ? dp.houses[ref - 1] : null;
+}
+function deepBlock(kb, dp, srcs) {
+  const D = dp.labels, seen = new Set();
+  srcs = srcs.filter(x => { const k = x.join(":"); if (seen.has(k)) return false; seen.add(k); return true; });
+  const ent = srcs.map(x => [x, srcEntry(dp, x)]).filter(([, e]) => e);
+  const o = [`**${D.inside}**`, ""];
+  for (const [x, e] of ent) o.push(`- **${srcLabel(kb, x)} — ${D.need.toLowerCase()}:** ${e.need}. ${e.mechanism}`);
+  for (const x of srcs) if (x[0] === "aspect") { const n = kb.aspects[x[1]].name; o.push(`- **${n[0].toUpperCase() + n.slice(1)}:** ${dp.aspects[x[1]]}`); }
+  o.push("");
+  for (const ch of CH) {
+    if (ent.length === 1) o.push(`- **${D[ch]}.** ${ent[0][1][ch]}`);
+    else { o.push(`- **${D[ch]}**`); for (const [x, e] of ent) o.push(`    - ${srcLabel(kb, x)}: ${e[ch]}`); }
+  }
+  const roots = [...new Set(ent.map(([, e]) => e.shadow_root).filter(Boolean))], ks = [...new Set(ent.map(([, e]) => e.key).filter(Boolean))];
+  if (roots.length) o.push(`- **${D.shadow_root}.** ${roots.join(" ")}`);
+  if (ks.length) o.push(`- **${D.key}.** ${ks.join(" ")}`);
+  return [...o, ""];
+}
+function recipe(kb, dp, solar) {
+  const D = dp.labels, b = solar.bodies;
+  const srcs = [["sign", Math.floor(norm(solar.asc) / 30)], ["house", b.sun.house], ["planet", "moon"]];
+  if (b.moon.house !== b.sun.house) srcs.push(["house", b.moon.house]);
+  Object.keys(ANGULAR_W).filter(k => [1, 4, 7, 10].includes(b[k].house)).slice(0, 2).forEach(k => srcs.push(["planet", k]));
+  const o = [`## ${D.recipe}`, "", D.recipe_intro, ""];
+  for (const ch of CH) { o.push(`### ${D[ch]}`, ""); for (const x of srcs) o.push(`- **${srcLabel(kb, x)}:** ${srcEntry(dp, x)[ch]}`); o.push(""); }
+  return o;
+}
+function observeTable(kb, dp) {
+  const D = dp.labels, o = [`### ${D.observe5}`, "", `| ${kb.labels.house} | ${CH.map(c => D[c]).join(" | ")} |`, "| --- | --- | --- | --- | --- | --- |"];
+  dp.house_observe.forEach((x, i) => o.push(`| ${i + 1} | ${CH.map(c => x[c]).join(" | ")} |`));
+  return [...o, ""];
 }
 
 function compute(f) {
@@ -213,13 +256,15 @@ function reportMd(r, lang) {
   for (const [k] of BODIES) { const b = r.solar.bodies[k];
     o.push(`| ${kb.planets[k].name}${b.retro && k !== "node" ? ` (${L.retro})` : ""} | ${fl(b.lon)} | ${b.house} | ${b.natal_house} |`); }
   o.push("", `## ${L.keys}`, "");
+  const dp = DEEP[lang];
   yearKeys(kb, r.solar, r.toNatal).forEach((k, i) => o.push(`### ${i + 1}. ${k.title}`, "", k.text, "",
-    `- **${L.light}:** ${k.light}`, `- **${L.shadow}:** ${k.shadow}`, `- **${L.helps}:** ${k.helps}`, ""));
+    `- **${L.light}:** ${k.light}`, `- **${L.shadow}:** ${k.shadow}`, `- **${L.helps}:** ${k.helps}`, "", ...deepBlock(kb, dp, k.src)));
+  o.push(...recipe(kb, dp, r.solar));
   o.push(`## ${L.year_by_area}`, "", L.year_by_area_intro, "", `| ${L.sr_to_natal} | ${L.sr_house} | ${L.natal_house} |`, "| --- | --- | --- |");
   for (const m of r.hmap) o.push(`| ${m.sr} → ${m.natal} | ${H[m.sr - 1].sphere} | ${H[m.natal - 1].sphere} |`);
   o.push("", `## ${L.aspects_natal}`, "");
   if (r.toNatal.length) for (const a of r.toNatal) { const A = info(kb, a.solar), B = info(kb, a.natal), at = kb.aspects[a.aspect];
-    o.push(`- **${t.aspect_key.replace("{a}", A.name).replace("{aspect}", at.name).replace("{b}", B.name)}** (${a.orb}°): ${at.tone.replace("{a}", A.name).replace("{b}", B.name)}.`); }
+    o.push(`- **${t.aspect_key.replace("{a}", A.name).replace("{aspect}", at.name).replace("{b}", B.name)}** (${a.orb}°): ${at.tone.replace("{a}", `${A.name} (${L.sr_short})`).replace("{b}", `${B.name} (${L.natal_short})`)}.`); }
   else o.push(L.aspects_natal_none);
   o.push("", `## ${L.degrees}`, "", L.degrees_intro, "");
   if (!r.degs.natal.length && !r.degs.solar.length) o.push(L.degrees_none, "");
@@ -239,20 +284,22 @@ function reportMd(r, lang) {
     }
     o.push("");
   }
+  o.push(...observeTable(kb, dp));
   o.push(`## ${L.meeting}`, "", t.meeting, "", `## ${L.journal}`, "", t.journal, "",
     `## ${L.method}`, "", L.method_text.replace("{hs}", f.hsName), "", `*${t.footer}*`, "");
   return o.join("\n");
 }
 
 function promptText(r, md, langName) {
-  return `You are an experienced astrologer working in the solar-return tradition of 12 days before and 12 days after the return (each day = one house). Below are PRECISE computed data (Swiss Ephemeris) and a structured draft report. Do not recalculate positions or invent new ones; use only these numbers.
+  return `You are an experienced astrologer and a psychologically literate guide working in the solar-return tradition of 12 days before and 12 days after the return (each day = one house). Below are PRECISE computed data (Swiss Ephemeris) and a structured draft report. Do not recalculate positions or invent new ones; use only these numbers.
 
-Please write a warm, practical, personal reading of this solar return in ${langName}:
-1) the main themes of the year (Ascendant of the solar return, house of the Sun, stelliums, Moon, angular planets, aspects to the natal chart, royal/destructive degrees);
-2) the year by area (solar-return house → natal house);
-3) guidance for each of the 24 days: what to close and what to observe/open;
-4) how to meet the exact moment and keep an observation diary.
-Astrology is a language for reflection, not a forecast: no medical, legal or financial instructions, no predictions of illness or disasters.
+Write a detailed, personal reading of this solar return in ${langName}. The goal is self-understanding, not instructions like "be this way": explain WHY a person may feel and act a certain way this year and which inner mechanisms are at work.
+1) For each key of the year explain the underlying need, the mechanism (need → feeling → thought → action → reaction), and how it may show up in five layers of daily life: body sensations, feelings, thoughts, actions, reactions to people and events. Show both the light and the shadow side and where the shadow comes from.
+2) Show how the factors interact as one system (where they support each other and where they conflict), not as separate statements.
+3) The year by area (solar-return house → natal house), aspects to the natal chart, royal/destructive degrees.
+4) For each of the 24 days: what closes or opens, and what to notice in the body, feelings, thoughts, actions and reactions.
+5) How to meet the exact moment and keep an observation diary.
+Use phrasing like "may show up", "notice if"; astrology is a language for reflection, not a forecast. No medical, legal or financial instructions, no predictions of illness or disasters.
 
 --- DATA AND DRAFT ---
 ${md}`;
@@ -323,7 +370,15 @@ function renderMd(md) {
         rows.slice(2).map(r => `<tr>${cells(r).map(c => `<td>${c}</td>`).join("")}</tr>`).join("") + "</tbody></table></div>");
       continue;
     }
-    if (l.startsWith("- ")) { const items = []; while (i < lines.length && lines[i].startsWith("- ")) items.push(`<li>${inline(lines[i++].slice(2))}</li>`); html.push(`<ul>${items.join("")}</ul>`); continue; }
+    if (l.startsWith("- ")) {
+      const items = [];
+      while (i < lines.length && (lines[i].startsWith("- ") || lines[i].startsWith("    - "))) {
+        if (lines[i].startsWith("    - ")) { const sub = []; while (i < lines.length && lines[i].startsWith("    - ")) sub.push(`<li>${inline(lines[i++].slice(6))}</li>`);
+          items[items.length - 1] = items[items.length - 1].replace(/<\/li>$/, `<ul>${sub.join("")}</ul></li>`); }
+        else items.push(`<li>${inline(lines[i++].slice(2))}</li>`);
+      }
+      html.push(`<ul>${items.join("")}</ul>`); continue;
+    }
     const m = l.match(/^(#{1,3}) (.*)/);
     if (m) html.push(`<h${m[1].length + 1}>${inline(m[2])}</h${m[1].length + 1}>`);
     else if (l.trim()) html.push(`<p>${inline(l)}</p>`);
@@ -355,8 +410,8 @@ async function init() {
     a.download = `solar-return-${last.r.f.year}.md`; a.click(); URL.revokeObjectURL(a.href);
   };
   $("status").textContent = UI[lang0].loading;
-  const [ru, en, deg] = await Promise.all(["data/kb.ru.json", "data/kb.en.json", "data/degrees.json"].map(p => fetch(p).then(r => r.json())));
-  KB = { ru, en }; DEG = deg;
+  const [ru, en, dru, den, deg] = await Promise.all(["data/kb.ru.json", "data/kb.en.json", "data/deep.ru.json", "data/deep.en.json", "data/degrees.json"].map(p => fetch(p).then(r => r.json())));
+  KB = { ru, en }; DEEP = { ru: dru, en: den }; DEG = deg;
   swe = new SwissEphemeris(); await swe.init(new URL("./vendor/swisseph.wasm", import.meta.url).href);
   $("status").textContent = UI[$("lang").value].ready; $("calc").disabled = false;
   window.__solar = { compute, reportMd, ready: true };
