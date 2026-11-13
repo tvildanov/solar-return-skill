@@ -4,6 +4,7 @@ import argparse
 import ast
 import hashlib
 import io
+import json
 from pathlib import Path
 import re
 import zipfile
@@ -16,6 +17,8 @@ FILES = (
     'solar-return/VERSION',
     'solar-return/requirements.txt',
     'solar-return/references/observation.md',
+    'solar-return/references/conversation.md',
+    'solar-return/references/birth-time.md',
     'solar-return/data/ALGORITHM.md',
     'solar-return/data/deep.en.json',
     'solar-return/data/deep.ru.json',
@@ -31,6 +34,19 @@ FILES = (
 )
 
 
+def description_value(frontmatter):
+    # JSON double-quoted strings are valid YAML scalars. Requiring this small
+    # subset prevents a colon in prose from silently breaking Skill discovery.
+    match = re.search(r'^description: (.+)$', frontmatter, re.M)
+    try:
+        description = json.loads(match[1]) if match else None
+    except json.JSONDecodeError as exc:
+        raise ValueError('description must be a JSON double-quoted YAML string') from exc
+    if not isinstance(description, str) or not description or len(description) > 200:
+        raise ValueError('description must be a nonempty string fitting 200 characters')
+    return description
+
+
 def build_bytes():
     skill = (ROOT / 'solar-return/SKILL.md').read_text(encoding='utf-8')
     if not skill.startswith('---\n'):
@@ -38,9 +54,7 @@ def build_bytes():
     frontmatter = skill.split('---\n', 2)[1]
     if not re.search(r'^name: solar-return$', frontmatter, re.M):
         raise ValueError('skill name must match root directory')
-    match = re.search(r'^description: (.+)$', frontmatter, re.M)
-    if not match or len(match[1]) > 200:
-        raise ValueError('description must fit 200 characters')
+    description_value(frontmatter)
     if (ROOT / 'LICENSE').read_bytes() != (ROOT / 'solar-return/LICENSE').read_bytes():
         raise ValueError('packaged license differs from repository license')
     version = (ROOT / 'solar-return/VERSION').read_text().strip()
@@ -54,7 +68,6 @@ def build_bytes():
                 raise ValueError(f'symlink forbidden: {name}')
             data = path.read_bytes()
             if name.endswith('.json'):
-                import json
                 json.loads(data)  # data files must parse
             if name.endswith('.py'):
                 tree = ast.parse(data, filename=name)  # syntax only; never executes skill

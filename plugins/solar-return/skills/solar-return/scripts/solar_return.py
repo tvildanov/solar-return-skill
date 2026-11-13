@@ -45,7 +45,7 @@ except ImportError:
              "python -m pip install -r requirements.txt inside it. See INSTALL.md.")
 
 FLAGS = swe.FLG_MOSEPH | swe.FLG_SPEED   # built-in Moshier ephemeris, no data files needed
-VERSION = "0.4.0"
+VERSION = "0.5.0"
 MIN_YEAR, MAX_YEAR = 2, 2999
 HOUSE_SYSTEMS = {
     "P": "Placidus", "K": "Koch", "O": "Porphyry", "R": "Regiomontanus", "C": "Campanus",
