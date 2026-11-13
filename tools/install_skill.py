@@ -7,7 +7,7 @@ import sys
 
 from package_skill import FILES, ROOT
 
-HOST_DIRS = {'codex': '.agents', 'cursor': '.cursor', 'claude-code': '.claude'}
+HOST_DIRS = {'codex': '.agents', 'cursor': '.cursor', 'claude-code': '.claude', 'grok-build': '.grok'}
 
 
 def install(host, base, *, dry_run=False, source_root=ROOT):

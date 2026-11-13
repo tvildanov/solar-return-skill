@@ -2,13 +2,23 @@
 
 **English** · **[Русский](README.ru.md)**
 
-A free solar-return toolkit by **[AstroEmpathy](https://astroempathy.org)**: the exact moment the Sun returns to its birth position, the chart of the year for the place where you meet it, and the 24-day calendar — 12 days closing the old year and 12 days opening the new one. Version **0.4.0**.
+A free solar-return toolkit by **[AstroEmpathy](https://astroempathy.org)**: the exact moment the Sun returns to its birth position, the chart of the year for the place where you meet it, and the 24-day calendar — 12 days closing the old year and 12 days opening the new one. Version **0.5.0**.
+
+## One package to share with friends
+
+Download **[solar-return-assistant-kit.zip](https://github.com/tvildanov/solar-return-skill/raw/main/solar-return-assistant-kit.zip)** · [SHA-256](solar-return-assistant-kit.zip.sha256)
+
+Unzip it and open `README-FIRST.md`. It contains ready-to-use instructions for **Claude, ChatGPT, Grok, Gemini and other agents**, plus the full `solar-return.zip` calculator skill. Choose your agent's file and follow its upload/paste instructions. **The kit is not a universal installer:** native skill support and permission to execute Python vary by account. A plain chat can guide you and interpret output from the browser calculator.
+
+The assistant asks only for missing details, explains the result, accepts corrections in the same conversation, and offers optional birth-time sensitivity/rectification without claiming to discover an exact historical time. You calculate your own chart with your own agent; no personal birth data is included in the package.
+
+[Start here](START.md) · [Choose a platform](PLATFORMS.md) · [Standalone conversation adapters](adapters/README.md)
 
 ## Online calculator — nothing to install
 
 **[tvildanov.github.io/solar-return-skill](https://tvildanov.github.io/solar-return-skill/)**
 
-Runs entirely in your browser on the Swiss Ephemeris: the moment to the second, chart of the year, keys of the year, the year by area, royal and destructive degrees, the 24 days with the Moon sign of each day, new and full moons. **"Copy prompt for any AI"** packs the precise data into text you can paste into ChatGPT, Gemini, Claude, DeepSeek or any other AI to get a reading in any of 18 languages. Your birth date and time are never sent anywhere; city search sends only the city name to Open-Meteo.
+Runs entirely in your browser on the Swiss Ephemeris: the moment to the second, chart of the year, keys of the year, the year by area, royal and destructive degrees, the 24 days with the Moon sign of each day, new and full moons. **"Copy prompt for any AI"** packs the precise data into text you can paste into ChatGPT, Gemini, Claude, Grok, DeepSeek or any other AI to get a reading in any of 18 languages. Your birth date and time are never sent anywhere; city search sends only the city name to Open-Meteo.
 
 ## The skill for AI agents
 
@@ -31,7 +41,7 @@ Download **[solar-return.zip](https://github.com/tvildanov/solar-return-skill/ra
 | Where to meet the return: compare cities, scan longitudes, nearest point to home with the wanted Sun house, "Sun on Ascendant" point, launch plan | `--place`, `--scan-lat --goal-house`, `--home --launch-house --radius-km` |
 | Deep layer: need, mechanism and five layers of daily life (body, feelings, thoughts, actions, reactions) for every key; the recipe of the year | in `--report` (`deep.<lang>.json`) |
 | Printable observation diary with the zero-degree switch of the year's goal | `--diary` |
-| Birth-time rectification to the minute from dated life events | `scripts/rectify.py --window 60 --event "YYYY-MM-DD\|label"` |
+| Optional birth-time sensitivity and heuristic ranking (minute resolution, not validated accuracy) | `scripts/rectify.py --window 60 --event "YYYY-MM-DD\|label"` |
 
 ### Run locally
 
@@ -57,7 +67,7 @@ Astrology here is a language for reflection, not a scientifically validated fore
 
 ## Privacy
 
-The calculator makes no network requests. The AI host processes whatever you type into it; `--json` writes your inputs to a local file. Do not publish birth data of other people without consent.
+The Python scripts make no network requests. The browser downloads code and data; city search sends a city query to Open-Meteo. Birth inputs are not sent by the calculator, but pasting a report or prompt into an AI shares it with that AI service. The AI host processes whatever you type into it; `--json` writes your inputs to a local file. Do not publish birth data of other people without consent.
 
 ## License
 

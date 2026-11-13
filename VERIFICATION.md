@@ -1,3 +1,28 @@
+# Version 0.5.0 — shareable assistant kit and conversational onboarding
+
+Date: **2026-11-13**. Baseline: `7c71be576ee8c486540ed421f0976adf24d40b7f` (0.4.0). No personal charts or recipient data were used.
+
+## Passed
+
+- **60 Python tests**, both with the system IANA database and with pinned `tzdata==2026.6` forced via `PYTHONTZPATH=''`. Linux x86-64, Python 3.12, `pyswisseph==2.10.3.2` built in an isolated virtual environment using the available GCC toolchain.
+- **3 Node prompt-contract tests** for browser output handoff, corrections, runtime honesty, unknown birth-time precision, optional interpretation and privacy. These inspect emitted text, not behavior in every AI model.
+- All **19 functions** in the main `solar_return.py` calculator are AST-identical to the baseline. Only its version constant changed. Existing recorded JPL reference tests pass; no new independent astronomy audit was performed.
+- Rectification regression tests reproduced the old spring-gap/fold defects before the fix. Windows now step in UTC and display dates/offsets. Duplicate/pre-birth/unsupported/skipped event dates are rejected. Zero/tied scores do not identify a unique birth minute; minute resolution is explicitly not accuracy or probability.
+- Fixed invalid YAML in the old skill description (an unquoted colon followed by a space). The frontmatter now passes a real YAML parse; packaging enforces a quoted scalar and a regression test rejects the old malformed value.
+- All three deterministic archives and SHA-256 files match their sources. The new assistant kit contains five standalone instructions (Claude, ChatGPT, Grok, Gemini, generic), bilingual start instructions and the exact canonical skill ZIP. Source symlinks are rejected for kit adapters, including the start document and adapter directory.
+- Extracted skill ZIP and plugin ZIP each executed a synthetic solar-return report/JSON and repeated-hour rectification smoke test successfully. The report returned the existing reference moment `2026-04-17 10:11:17 America/New_York` for the synthetic Berlin example.
+- Four temporary host-install destinations were verified without modifying a real user profile. Canonical conversational and birth-time references survive both skill/plugin packaging. Five standalone protocols are identical and below 8,000 characters, with platform-specific introductions.
+- Official platform documentation was checked for the instructions in [PLATFORMS.md](PLATFORMS.md). Local documentation links and `git diff --check` pass.
+
+## Not established by these checks
+
+- No real-account installation or execution was tested in Claude, ChatGPT, Grok or Gemini. No marketplace publication, remote API, merge or deployment is part of this verification. Reading, installing and executing remain separate states.
+- A local Chromium smoke test was attempted but the execution sandbox denied browser socket creation before startup. Actual browser UI/clipboard smoke testing for this revision remains **not run**; the copied prompt's three contract tests passed. Browser numerical formulas and rendered report layout were not changed.
+- Synthetic event-score tests verify implementation consistency, not real-world rectification validity. No astrological or psychological claim is scientifically validated by this release.
+- macOS/Windows and account-specific dependency/network restrictions were not tested. The instructions provide a no-runtime browser fallback without claiming that every AI can execute the calculator.
+
+---
+
 # Version 0.3.0 — distilled algorithm, autonomous report, relocation, rectification, web calculator
 
 - Independent Astropy/ERFA check (`tests/independent_check.py`, 5 synthetic charts): return moment ≤ 2 s; ASC, MC, Moon ≤ 0.04′.

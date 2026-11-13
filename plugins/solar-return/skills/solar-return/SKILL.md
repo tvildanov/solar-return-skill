@@ -1,6 +1,6 @@
 ---
 name: solar-return
-description: Solar return (соляр): exact moment, chart, 24-day calendar, royal degrees, where to meet it, observation diary, birth-time rectification. Needs Python.
+description: "Solar return (соляр): exact moment, chart, 24-day calendar, royal degrees, where to meet it, observation diary, birth-time rectification. Needs Python."
 ---
 
 # Solar return (соляр)
@@ -11,13 +11,15 @@ This skill computes astronomical positions using Swiss Ephemeris in built-in Mos
 
 Answer in the language the person writes in.
 
+Read [references/conversation.md](references/conversation.md) for the shared Claude/ChatGPT/Grok conversation flow: ask only for missing information, explain results, accept corrections in the same chat, and rerun affected calculations rather than editing old chart numbers. If Python is unavailable, help the person use the browser calculator and interpret its pasted output with an explicit “not recalculated here” label.
+
 Keep **calculated astronomy**, **symbolic interpretation** and **reported subjective experience** visibly separate throughout the report. Offer the optional AstroEmpathy observation approach in [references/observation.md](references/observation.md) only if the person wants it. Read that reference before guiding an exercise; do not infer sensations from the chart or present observations as evidence of celestial causation. A calculation-only report needs no journal.
 
 ## 1. Collect the data
 
 Ask only for what is missing:
 
-1. Date and local time of birth (as exact as possible). If the time is unknown, explain that both the return time and houses are uncertain; do not invent a time or present a precise chart. A provisional time-based scenario requires the user to explicitly choose and acknowledge the assumption.
+1. Date and local time of birth, plus whether the time is recorded, remembered, approximate or unknown. If uncertain, read [references/birth-time.md](references/birth-time.md): ask for the plausible interval without inventing one, explain that both the return time and houses are uncertain, and offer sensitivity before optional rectification. Do not present an assumed time as a fact. A provisional time-based scenario requires the user to explicitly choose and acknowledge the assumption.
 2. Place of birth (city, country).
 3. The birthday-anniversary year they want. `--year` searches near that anniversary; the event may fall in the preceding/following calendar year. If they mean an event strictly within January–December, clarify rather than silently changing the meaning (default: the next one that has not passed yet, or the current one if it is within the last 12 days).
 4. Where they will be at the moment of the solar return (city and country are enough). If unknown, ask whether to use their current city; do not infer their location. Do not request a full name or home address.
@@ -60,7 +62,7 @@ All rules are written out in [data/ALGORITHM.md](data/ALGORITHM.md); texts are i
 - **Observation diary:** `--diary` prints a printable diary: what belongs to each house, fields for every day, the zero-degree switch of the year's goal (closing goal on day −1, opening goal on day +1).
 - **Royal and destructive degrees:** always in `--report`. `--degree-convention ordinal|exact` (default ordinal: the 13th degree is 12°00′–12°59′). Present them as symbolic accents, not fate.
 - **Where to meet the return:** compare places with `--place "City|lat|lon"` (repeatable); scan longitudes along a latitude with `--scan-lat <lat> --goal-house <n>`; recommend the nearest point to home with `--home "Name|lat|lon" --launch-house <n> --radius-km <km>` (reports the nearest point, the zone boundary, the "Sun on Ascendant" longitude and degrees on the angles, plus a launch plan). Never label a place good or bad; let the person choose by intention.
-- **Birth-time rectification to the minute:** `python scripts/rectify.py --birth ... --birth-tz ... --birth-lat ... --birth-lon ... --window 60 --event "YYYY-MM-DD|label" ...`. Without events it shows sensitivity (how ASC/MC change and where the Ascendant changes sign). With 5–10 precisely dated major events it ranks every minute by transits of Jupiter–Pluto to the angles and solar-arc directions. Always present the result as a hypothesis for an astrologer to confirm; ask for events rather than inventing them.
+- **Optional birth-time exploration:** read [references/birth-time.md](references/birth-time.md), then use `python scripts/rectify.py --birth ... --birth-tz ... --birth-lat ... --birth-lon ... --window <agreed minutes> --event "YYYY-MM-DD|generic label" ...`. Without events it shows natal ASC/MC sensitivity. With voluntarily supplied dated milestones it ranks minutes by an astrological heuristic. Minute search resolution is not minute accuracy, and scores are not probabilities. Never request intimate details, invent dates, promise to recover the true time, or select an unsupported/tied candidate as fact. Ask before rerunning the solar return with a provisional candidate; retain the original time separately.
 
 ## 4. Write the report
 
