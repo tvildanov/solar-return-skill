@@ -220,13 +220,15 @@ def highlighted_houses(solar: dict) -> dict:
 
 
 def _point_name(kb, key):
+    if key.startswith("cusp"):
+        return kb["labels"]["cusp_of"].format(house=key[4:])
     return kb["planets"][key]["name"] if key in kb["planets"] else kb["points"][key]["name"]
 
 
 def degrees_section(kb, degrees, convention) -> list:
     L = kb["labels"]
     out = [f"## {L['degrees']}", "", L["degrees_intro"], ""]
-    if not any(degrees.values()):
+    if not (degrees.get("natal") or degrees.get("solar")):
         out += [L["degrees_none"], ""]
     for chart_name, label in (("natal", L["degrees_natal"]), ("solar", L["degrees_solar"])):
         hits = degrees.get(chart_name, [])
@@ -236,6 +238,13 @@ def degrees_section(kb, degrees, convention) -> list:
                 out.append("- " + kb["degree_text"][h["kind"]].format(
                     point=_point_name(kb, h["point"]), deg=h["degree"], sign=kb["signs"][h["sign"]]["name"]))
             out.append("")
+    if degrees.get("activated"):
+        out += [f"**{L['degrees_activated']}**", ""]
+        for h in degrees["activated"]:
+            out.append("- " + L["degrees_activated_text"].format(
+                solar=_point_name(kb, h["solar"]), aspect=kb["aspects"][h["aspect"]]["name"],
+                natal=_point_name(kb, h["point"]), kind=L[h["kind"]], orb=h["orb"]))
+        out.append("")
     conv = L["conv_ordinal"] if convention == "ordinal" else L["conv_exact"]
     out += [f"*{L['degrees_convention'].format(conv=conv, src='ezoastra.com, the-day.ru')}*", ""]
     return out

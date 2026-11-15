@@ -1,3 +1,9 @@
+# Version 0.5.1 — degrees on house cusps, activations, ordinal convention confirmed
+
+- Royal/destructive degree check now covers house cusps 2–12 of both charts and lists natal points on special degrees that the solar return aspects.
+- Convention settled as ordinal by internal evidence: the table lists a 30th degree of Aquarius, which exists only in ordinal counting.
+- Distribution tests compare archive contents instead of compressed bytes (zlib builds differ between machines).
+
 # Version 0.5.0 — shareable assistant kit and conversational onboarding
 
 Date: **2026-11-13**. Baseline: `7c71be576ee8c486540ed421f0976adf24d40b7f` (0.4.0). No personal charts or recipient data were used.

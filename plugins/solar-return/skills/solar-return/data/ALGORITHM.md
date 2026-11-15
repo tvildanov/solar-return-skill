@@ -65,8 +65,9 @@ need → mechanism (how the need turns into feeling, thought, action and reactio
   - Royal: Aries 18, Gemini 9, Leo 7, Virgo 25, Scorpio 13, Capricorn 11, Aquarius 30.
   - Destructive: Aries 23, Gemini 13, Leo 10, Libra 1, Scorpio 19, Capricorn 19, Pisces 4.
 - Two sources give identical numbers; neither names the original author.
-- Convention: **ordinal** (default) — the 13th degree is 12°00′–12°59′; **exact** — 13°00′–13°59′. Sources do not specify; the report states which was used.
-- Checked points: all bodies and ASC/MC of both the natal and the solar-return chart.
+- Convention: **ordinal** — the 13th degree is 12°00′–12°59′. Internal evidence: the table lists a 30th degree (Aquarius 30), which exists only in ordinal counting. `exact` (13°00′–13°59′) is kept for comparison only.
+- Checked points: all bodies, ASC, MC and house cusps 2–12 of both the natal and the solar-return chart.
+- Activation: a natal point on a special degree that a solar-return body aspects within the natal orb is listed as "switched on this year".
 - Royal: the force is traditionally supported and may bring recognition. Destructive: a vulnerable spot that needs care. Never presented as fate.
 
 ## 7. Relocation: where to meet the solar return [astronomy + convention]

@@ -42,7 +42,19 @@ def find(points: dict, convention: str = "ordinal") -> list:
     return hits
 
 
-def chart_points(chart: dict) -> dict:
+def chart_points(chart: dict, cusps: bool = True) -> dict:
+    """Bodies, ASC, MC and (by default) the other ten house cusps: keys cusp2 … cusp12."""
     pts = {k: v["lon"] for k, v in chart["bodies"].items()}
     pts.update({"asc": chart["asc"], "mc": chart["mc"]})
+    if cusps:
+        for i, lon in enumerate(chart["cusps"], 1):
+            if i not in (1, 10):
+                pts[f"cusp{i}"] = lon
     return pts
+
+
+def activations(natal_hits: list, to_natal: list) -> list:
+    """Natal points on special degrees that a solar-return body aspects this year."""
+    by_point = {h["point"]: h for h in natal_hits}
+    return [dict(by_point[a["natal"]], solar=a["solar"], aspect=a["aspect"], orb=a["orb"])
+            for a in to_natal if a["natal"] in by_point]

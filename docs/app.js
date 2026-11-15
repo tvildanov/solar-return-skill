@@ -144,7 +144,9 @@ function degreeHits(points) {
   }
   return hits;
 }
-const pointsOf = c => ({ ...Object.fromEntries(Object.entries(c.bodies).map(([k, v]) => [k, v.lon])), asc: c.asc, mc: c.mc });
+const pointsOf = c => ({ ...Object.fromEntries(Object.entries(c.bodies).map(([k, v]) => [k, v.lon])), asc: c.asc, mc: c.mc,
+  ...Object.fromEntries(c.cusps.map((lon, i) => [`cusp${i + 1}`, lon]).filter(([k]) => k !== "cusp1" && k !== "cusp10")) });
+const pointName = (kb, k) => k.startsWith("cusp") ? kb.labels.cusp_of.replace("{house}", k.slice(4)) : info(kb, k).name;
 
 // ---------- report (same rules as report.py) ----------
 function info(kb, k) { return kb.planets[k] || kb.points[k]; }
@@ -242,6 +244,7 @@ function compute(f) {
   const toNatal = natalAspects(solar, natal, 1);
   const hmap = solar.cusps.map((c, i) => ({ sr: i + 1, natal: houseOf(c, natal.cusps) }));
   const degs = { natal: degreeHits(pointsOf(natal)), solar: degreeHits(pointsOf(solar)) };
+  degs.activated = toNatal.flatMap(a => degs.natal.filter(h => h.point === a.natal).map(h => ({ ...h, solar: a.solar, aspect: a.aspect, orb: a.orb })));
   return { f, bu, natal, solar, sun0, srMs, days, lunas, toNatal, hmap, degs };
 }
 
@@ -269,7 +272,10 @@ function reportMd(r, lang) {
   o.push("", `## ${L.degrees}`, "", L.degrees_intro, "");
   if (!r.degs.natal.length && !r.degs.solar.length) o.push(L.degrees_none, "");
   for (const [c, lab] of [["natal", L.degrees_natal], ["solar", L.degrees_solar]]) if (r.degs[c].length) {
-    o.push(`**${lab}**`, ""); for (const h of r.degs[c]) o.push("- " + kb.degree_text[h.kind].replace("{point}", info(kb, h.point).name).replace("{deg}", h.deg).replace("{sign}", kb.signs[h.sign].name)); o.push(""); }
+    o.push(`**${lab}**`, ""); for (const h of r.degs[c]) o.push("- " + kb.degree_text[h.kind].replace("{point}", pointName(kb, h.point)).replace("{deg}", h.deg).replace("{sign}", kb.signs[h.sign].name)); o.push(""); }
+  if (r.degs.activated.length) { o.push(`**${L.degrees_activated}**`, "");
+    for (const h of r.degs.activated) o.push("- " + L.degrees_activated_text.replace("{solar}", pointName(kb, h.solar)).replace("{aspect}", kb.aspects[h.aspect].name).replace("{natal}", pointName(kb, h.point)).replace("{kind}", L[h.kind]).replace("{orb}", h.orb));
+    o.push(""); }
   o.push(`*${L.degrees_convention.replace("{conv}", L.conv_ordinal).replace("{src}", "ezoastra.com, the-day.ru")}*`, "");
   const occ = {}; for (const k of STELLIUM) (occ[r.solar.bodies[k].house] ||= []).push(k);
   o.push(`## ${L.days}`, "", L.days_intro, "");

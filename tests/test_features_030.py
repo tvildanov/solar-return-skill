@@ -67,6 +67,22 @@ class Degrees(unittest.TestCase):
         self.assertEqual(degrees.find({"x": 180.2}, "ordinal")[0]["kind"], "destructive")  # 1st Libra
 
 
+class DegreesCuspsAndActivation(unittest.TestCase):
+    def test_cusps_checked_and_activation_linked(self):
+        chart = {"bodies": {"sun": {"lon": 10.0}}, "asc": 100.0, "mc": 5.0,
+                 "cusps": [100.0, 130.0, 160.0, 185.0, 222.5, 250.0, 282.0, 310.0, 340.0, 5.0, 40.0, 70.0]}
+        pts = degrees.chart_points(chart)
+        self.assertIn("cusp5", pts)
+        self.assertNotIn("cusp1", pts)
+        hits = degrees.find(pts, "ordinal")
+        self.assertEqual([(h["point"], h["kind"]) for h in hits], [("cusp5", "royal")])  # 12°30' Scorpio
+        natal_hits = [{"point": "mars", "kind": "royal", "sign": 7, "degree": 13, "lon": 222.5}]
+        act = degrees.activations(natal_hits, [{"solar": "jupiter", "natal": "mars", "aspect": "trine", "orb": 0.4},
+                                               {"solar": "sun", "natal": "moon", "aspect": "square", "orb": 0.2}])
+        self.assertEqual(len(act), 1)
+        self.assertEqual((act[0]["solar"], act[0]["kind"]), ("jupiter", "royal"))
+
+
 class Extras(unittest.TestCase):
     def test_lunation_and_day(self):
         sr_utc = dt.datetime(2026, 7, 10, 0, 0, tzinfo=dt.timezone.utc)

@@ -41,14 +41,14 @@
     "with": "also:",
     "principles": "Themes",
     "degrees": "Royal and destructive degrees",
-    "degrees_intro": "In Russian-language astrology certain degrees of the signs are considered special. A royal degree traditionally strengthens and supports a planet; a destructive degree marks a vulnerable spot that needs awareness. These are symbolic accents, not verdicts.",
+    "degrees_intro": "In Russian-language astrology certain degrees of the signs are considered special. A royal degree traditionally strengthens and supports a planet or area; a destructive degree marks a vulnerable spot that needs awareness. Planets, the Ascendant, MC and all house cusps are checked in both the natal and the solar-return chart, as well as which natal points on such degrees the solar return touches by aspect. These are symbolic accents, not verdicts.",
     "degrees_none": "No point falls on a royal or destructive degree.",
     "degrees_natal": "Natal chart",
     "degrees_solar": "Solar-return chart",
     "royal": "royal",
     "destructive": "destructive",
     "degrees_convention": "Degree counting: {conv}. Table: {src}.",
-    "conv_ordinal": "ordinal (13th degree = 12°00′–12°59′)",
+    "conv_ordinal": "ordinal (13th degree = 12°00′–12°59′; the table lists a 30th degree of Aquarius, which exists only in ordinal counting)",
     "conv_exact": "exact (13° = 13°00′–13°59′)",
     "relocation": "Where to meet the solar return",
     "relocation_intro": "The moment of the solar return is the same everywhere on Earth, but houses and angles depend on the place. The comparison shows how the chart of the year changes from city to city.",
@@ -112,7 +112,10 @@
       "Keep notes for all 24 days"
     ],
     "sr_short": "SR",
-    "natal_short": "natal"
+    "natal_short": "natal",
+    "cusp_of": "cusp of house {house}",
+    "degrees_activated": "What is switched on this year",
+    "degrees_activated_text": "SR {solar} — {aspect} — natal {natal} on a {kind} degree (orb {orb}°): the theme of this degree sounds louder this year."
   },
   "signs": [
     {

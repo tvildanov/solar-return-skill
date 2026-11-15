@@ -2,7 +2,7 @@
 
 **English** · **[Русский](README.ru.md)**
 
-A free solar-return toolkit by **[AstroEmpathy](https://astroempathy.org)**: the exact moment the Sun returns to its birth position, the chart of the year for the place where you meet it, and the 24-day calendar — 12 days closing the old year and 12 days opening the new one. Version **0.5.0**.
+A free solar-return toolkit by **[AstroEmpathy](https://astroempathy.org)**: the exact moment the Sun returns to its birth position, the chart of the year for the place where you meet it, and the 24-day calendar — 12 days closing the old year and 12 days opening the new one. Version **0.5.1**.
 
 ## One package to share with friends
 

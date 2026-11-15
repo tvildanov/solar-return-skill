@@ -45,7 +45,7 @@ except ImportError:
              "python -m pip install -r requirements.txt inside it. See INSTALL.md.")
 
 FLAGS = swe.FLG_MOSEPH | swe.FLG_SPEED   # built-in Moshier ephemeris, no data files needed
-VERSION = "0.5.0"
+VERSION = "0.5.1"
 MIN_YEAR, MAX_YEAR = 2, 2999
 HOUSE_SYSTEMS = {
     "P": "Placidus", "K": "Koch", "O": "Porphyry", "R": "Regiomontanus", "C": "Campanus",
@@ -380,6 +380,7 @@ def run(a):
     import relocation as rel_mod
     deg_hits = {"natal": deg_mod.find(deg_mod.chart_points(natal), a.degree_convention),
                 "solar": deg_mod.find(deg_mod.chart_points(solar), a.degree_convention)}
+    deg_hits["activated"] = deg_mod.activations(deg_hits["natal"], to_natal)
     places = [{"name": ("Место встречи" if L == "ru" else "Return location") + f" ({a.sr_tz})",
                "lat": a.sr_lat, "lon": a.sr_lon}]
     for item in a.place:
@@ -483,11 +484,11 @@ def run(a):
 
     print("\n" + T("=== КОРОЛЕВСКИЕ И РАЗРУШИТЕЛЬНЫЕ ГРАДУСЫ ===", "=== ROYAL AND DESTRUCTIVE DEGREES ==="),
           f"({a.degree_convention})")
-    for chart_name, hits in deg_hits.items():
+    for chart_name, hits in ((k, deg_hits[k]) for k in ("natal", "solar")):
         for h in hits:
-            print(f"  {T('натал','natal') if chart_name == 'natal' else T('соляр','SR')}: {pnames[h['point']]} "
+            print(f"  {T('натал','natal') if chart_name == 'natal' else T('соляр','SR')}: {pnames.get(h['point'], T('куспид ','cusp ') + h['point'][4:])} "
                   f"{fmt_lon(h['lon'], L)} — {T('королевский','royal') if h['kind'] == 'royal' else T('разрушительный','destructive')}")
-    if not any(deg_hits.values()):
+    if not (deg_hits["natal"] or deg_hits["solar"]):
         print(T("  нет", "  none"))
 
     if reloc:

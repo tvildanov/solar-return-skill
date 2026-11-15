@@ -5,7 +5,24 @@
     "https://the-day.ru/astrology/korolevskie-i-razrushitelnye-gradusy-v-astrologii-priznaki-osoboi-sudby/"
   ],
   "sources_note": "Both sources give identical numbers; neither names an original author. Attribution to a specific school is not confirmed.",
-  "convention_note": "Sources do not state whether 'the 13th degree' means 12°00'–12°59' (ordinal, default) or 13°00'–13°59' (exact). Use --degree-convention to choose.",
-  "royal": {"aries": 18, "gemini": 9, "leo": 7, "virgo": 25, "scorpio": 13, "capricorn": 11, "aquarius": 30},
-  "destructive": {"aries": 23, "gemini": 13, "leo": 10, "libra": 1, "scorpio": 19, "capricorn": 19, "pisces": 4}
+  "convention_note": "The table lists a 30th degree (Aquarius 30). A 30th degree exists only in ordinal counting (29°00'–29°59'), so the table is ordinal: 'the 13th degree' = 12°00'–12°59'. This is the default. --degree-convention exact is kept only for comparison.",
+  "royal": {
+    "aries": 18,
+    "gemini": 9,
+    "leo": 7,
+    "virgo": 25,
+    "scorpio": 13,
+    "capricorn": 11,
+    "aquarius": 30
+  },
+  "destructive": {
+    "aries": 23,
+    "gemini": 13,
+    "leo": 10,
+    "libra": 1,
+    "scorpio": 19,
+    "capricorn": 19,
+    "pisces": 4
+  },
+  "checked_points": "Planets, North Node, ASC, MC and house cusps 2–12 of the natal and the solar-return chart."
 }
